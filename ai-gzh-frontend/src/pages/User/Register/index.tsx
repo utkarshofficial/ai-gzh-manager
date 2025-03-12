@@ -48,7 +48,9 @@ const UserRegisterPage: React.FC = () => {
 
       const defaultLoginSuccessMessage = '注册成功！';
       message.success(defaultLoginSuccessMessage);
-      history.push('/user/login');
+      history.push(
+        `/user/login?userAccount=${values.userAccount}&userPassword=${values.userPassword}`,
+      );
       return;
     } catch (error: any) {
       const defaultLoginFailureMessage = `注册失败，${error.message}`;
