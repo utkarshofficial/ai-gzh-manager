@@ -1,4 +1,5 @@
-import { pageUsingGet } from '@/services/backend/gongzhonghaozhanghaoguanli';
+import { deleteUsingPost, pageUsingGet } from '@/services/backend/gongzhonghaozhanghaoguanli';
+import { message } from 'antd';
 import { useCallback, useState } from 'react';
 
 /**
@@ -47,6 +48,48 @@ export default () => {
     setCurrentWxAccount(wxAccount);
   }, []);
 
+  /**
+   * 清空所有公众号
+   * @returns 是否清空成功
+   */
+  const clearAllWxAccounts = useCallback(async (): Promise<boolean> => {
+    if (wxAccountList.length === 0) {
+      message.info('当前没有公众号可清空');
+      return false;
+    }
+
+    setLoading(true);
+    try {
+      // 提取所有公众号的appId
+      const appIds = wxAccountList.map((account) => account.appId as string).filter(Boolean);
+
+      if (appIds.length === 0) {
+        message.error('没有有效的公众号AppID');
+        return false;
+      }
+
+      // 调用删除接口
+      const result = await deleteUsingPost(appIds);
+
+      if (result.code === 0 && result.data) {
+        // 清空本地状态
+        setWxAccountList([]);
+        setCurrentWxAccount(undefined);
+        message.success('已清空所有公众号');
+        return true;
+      } else {
+        message.error(result.message || '清空公众号失败');
+        return false;
+      }
+    } catch (error: any) {
+      console.error('清空公众号失败:', error);
+      message.error('清空公众号失败: ' + (error.message || '未知错误'));
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, [wxAccountList]);
+
   return {
     wxAccountList,
     currentWxAccount,
@@ -54,5 +97,6 @@ export default () => {
     fetchWxAccountList,
     switchWxAccount,
     setCurrentWxAccount,
+    clearAllWxAccounts,
   };
 };

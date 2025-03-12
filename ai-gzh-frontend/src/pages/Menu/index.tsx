@@ -1,4 +1,6 @@
 import AddWxAccount from '@/components/AddWxAccount';
+import ClearWxAccounts from '@/components/ClearWxAccounts';
+import WxAccountGuide from '@/components/WxAccountGuide';
 import WxAccountSelector from '@/components/WxAccountSelector';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -19,16 +21,22 @@ const WxAccountPage: React.FC = () => {
         title="公众号管理"
         extra={
           <Space split={<Divider type="vertical" />}>
+            <ClearWxAccounts
+              onSuccess={() => {
+                fetchWxAccountList();
+              }}
+            />
             <AddWxAccount
               onSuccess={() => {
-                // 刷新列表或其他操作
-                console.log('新增公众号成功，可以在这里刷新列表');
+                fetchWxAccountList();
               }}
             />
             <WxAccountSelector />
           </Space>
         }
-      ></Card>
+      >
+        <WxAccountGuide />
+      </Card>
     </PageContainer>
   );
 };
