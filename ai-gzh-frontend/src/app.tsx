@@ -40,11 +40,8 @@ export async function getInitialState(): Promise<InitialState> {
 // @ts-ignore
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    avatarProps: {
-      render: () => {
-        return <AvatarDropdown />;
-      },
-    },
+    rightRender: () => <AvatarDropdown />,
+    logo: '/logo.png',
     waterMarkProps: {
       content: initialState?.currentUser?.userName,
     },

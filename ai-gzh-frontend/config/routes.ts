@@ -7,7 +7,13 @@ export default [
       { path: '/user/register', component: './User/Register' },
     ],
   },
-  { path: '/welcome', icon: 'smile', component: './Welcome', name: '欢迎页' },
+  {
+    path: '/menu',
+    icon: 'message',
+    name: '菜单管理',
+    component: './Menu',
+    access: 'canUser',
+  },
   {
     path: '/admin',
     icon: 'crown',
@@ -25,6 +31,6 @@ export default [
     component: './WxAccount',
     access: 'canUser',
   },
-  { path: '/', redirect: '/welcome' },
+  { path: '/', redirect: '/menu' },
   { path: '*', layout: false, component: './404' },
 ];
