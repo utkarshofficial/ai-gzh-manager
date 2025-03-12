@@ -1,12 +1,12 @@
 import Footer from '@/components/Footer';
+import { siteInfo } from '@/constants/siteConfig';
 import { userLoginUsingPost } from '@/services/backend/userController';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { Helmet, history, useModel } from '@umijs/max';
+import { Helmet, history, Link, useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
-import { Link } from 'umi';
 import Settings from '../../../../config/defaultSettings';
 
 const Login: React.FC = () => {
@@ -65,9 +65,9 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" style={{ height: '100%' }} src="/logo.svg" />}
-          title="鱼皮前端万用模板"
-          subTitle={'快速开发属于自己的前端项目'}
+          logo={<img alt="logo" style={{ height: '100%' }} src={siteInfo.logo} />}
+          title={siteInfo.name}
+          subTitle={siteInfo.description}
           initialValues={{
             autoLogin: true,
           }}

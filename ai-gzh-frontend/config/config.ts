@@ -72,7 +72,7 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: '鱼皮前端万用模板',
+  title: '公众号运营平台',
   layout: {
     locale: true,
     ...defaultSettings,
