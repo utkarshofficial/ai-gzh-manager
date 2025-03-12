@@ -40,13 +40,12 @@ export const requestConfig: RequestConfig = {
       if (!data) {
         throw new Error('服务异常');
       }
-
       // 错误码处理
       const code: number = data.code;
       // 未登录，且不为获取用户登录信息接口
       if (
         code === 40100 &&
-        !requestPath.includes('user/get/login') &&
+        requestPath.includes('user/get/login') &&
         !location.pathname.includes('/user/login')
       ) {
         // 跳转至登录页

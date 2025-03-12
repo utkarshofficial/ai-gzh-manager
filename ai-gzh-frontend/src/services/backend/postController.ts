@@ -59,21 +59,6 @@ export async function getPostVoByIdUsingGet(
   });
 }
 
-/** listPostByPage POST /api/post/list/page */
-export async function listPostByPageUsingPost(
-  body: API.PostQueryRequest,
-  options?: { [key: string]: any },
-) {
-  return request<API.BaseResponsePagePost_>('/api/post/list/page', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
 /** listPostVOByPage POST /api/post/list/page/vo */
 export async function listPostVoByPageUsingPost(
   body: API.PostQueryRequest,

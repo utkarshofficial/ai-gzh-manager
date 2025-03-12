@@ -127,6 +127,14 @@ export async function userLoginByWxOpenUsingGet(
   });
 }
 
+/** getZsxqAuthUrl GET /api/user/login/zsxq_auth */
+export async function getZsxqAuthUrlUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseString_>('/api/user/login/zsxq_auth', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** userLogout POST /api/user/logout */
 export async function userLogoutUsingPost(options?: { [key: string]: any }) {
   return request<API.BaseResponseBoolean_>('/api/user/logout', {
