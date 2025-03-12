@@ -18,6 +18,13 @@ export default [
       { icon: 'table', path: '/admin/user', component: './Admin/User', name: '用户管理' },
     ],
   },
+  {
+    path: '/wxaccount',
+    icon: 'message',
+    name: '公众号管理',
+    component: './WxAccount',
+    access: 'canUser',
+  },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];
