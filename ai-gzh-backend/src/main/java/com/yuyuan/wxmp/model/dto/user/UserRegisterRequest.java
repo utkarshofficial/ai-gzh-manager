@@ -19,15 +19,15 @@ public class UserRegisterRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = 3191241716373120793L;
 
-    @NotBlank
+    @NotBlank(message = "用户账号不能为空")
     @Length(min = 4, max = 16, message = "用户账号长度不合法")
     private String userAccount;
 
-    @NotBlank
+    @NotBlank(message = "用户密码不能为空")
     @Length(min = 8, max = 128, message = "用户密码长度不合法")
     private String userPassword;
 
-    @NotBlank
+    @NotBlank(message = "用户确认密码不能为空")
     @Length(min = 8, max = 128, message = "用户确认密码长度不合法")
     private String checkPassword;
 }

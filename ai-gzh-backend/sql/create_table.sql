@@ -43,3 +43,21 @@ create table if not exists `wx_account`
     index idx_appId (appId),
     index idx_userId (userId)
 ) comment '微信公众号账号';
+
+create table if not exists `wx_reply_rule`
+(
+    `id`              bigint auto_increment comment 'id' primary key,
+    `appId`           char(20)                           not null comment 'appid',
+    `ruleName`        varchar(50)                        not null comment '规则名称',
+    `matchValue`      text                               null comment '匹配值（关键字或者事件的key）',
+    `eventKey`        varchar(50)                        null comment '菜单栏点击事件的key',
+    `replyContent`    text                               not null comment '回复内容（json）',
+    `ruleDescription` varchar(1024)                      null comment '规则描述',
+    `replyType`       tinyint                            not null comment '0 为关键词触发、1 为默认触发、2 为被关注触发、3 为菜单点击事件类型',
+    `userId`          bigint                             not null comment '创建用户 id',
+    `createTime`      datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    `updateTime`      datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    `isDelete`        tinyint  default 0                 not null comment '是否删除',
+    index idx_appId (appId),
+    index idx_userId (userId)
+) comment '微信公众号回复规则';
