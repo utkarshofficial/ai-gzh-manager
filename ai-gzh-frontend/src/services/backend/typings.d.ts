@@ -1,23 +1,4 @@
 declare namespace API {
-  type authGetUsingGETParams = {
-    /** appId */
-    appId: string;
-    /** echostr */
-    echostr?: string;
-    /** nonce */
-    nonce?: string;
-    /** signature */
-    signature?: string;
-    /** timestamp */
-    timestamp?: string;
-  };
-
-  type BaseResponse = {
-    code?: number;
-    data?: Record<string, any>;
-    message?: string;
-  };
-
   type BaseResponseArrayWxMaterialTypeEnum_ = {
     code?: number;
     data?: WxMaterialTypeEnum[];
@@ -54,12 +35,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseInt_ = {
-    code?: number;
-    data?: number;
-    message?: string;
-  };
-
   type BaseResponseLoginUserVO_ = {
     code?: number;
     data?: LoginUserVO;
@@ -69,30 +44,6 @@ declare namespace API {
   type BaseResponseLong_ = {
     code?: number;
     data?: number;
-    message?: string;
-  };
-
-  type BaseResponseNotification_ = {
-    code?: number;
-    data?: Notification;
-    message?: string;
-  };
-
-  type BaseResponseNotificationVO_ = {
-    code?: number;
-    data?: NotificationVO;
-    message?: string;
-  };
-
-  type BaseResponsePageNotification_ = {
-    code?: number;
-    data?: PageNotification_;
-    message?: string;
-  };
-
-  type BaseResponsePagePostVO_ = {
-    code?: number;
-    data?: PagePostVO_;
     message?: string;
   };
 
@@ -117,12 +68,6 @@ declare namespace API {
   type BaseResponsePageWxReplyRuleVO_ = {
     code?: number;
     data?: PageWxReplyRuleVO_;
-    message?: string;
-  };
-
-  type BaseResponsePostVO_ = {
-    code?: number;
-    data?: PostVO;
     message?: string;
   };
 
@@ -174,17 +119,6 @@ declare namespace API {
     message?: string;
   };
 
-  type checkUsingGETParams = {
-    /** echostr */
-    echostr?: string;
-    /** nonce */
-    nonce?: string;
-    /** signature */
-    signature?: string;
-    /** timestamp */
-    timestamp?: string;
-  };
-
   type deleteMaterialUsingPOSTParams = {
     /** appId */
     appId: string;
@@ -208,29 +142,16 @@ declare namespace API {
     materialId?: string;
   };
 
-  type getMaterialTypeUsingGETParams = {
+  type getMaterialVideoByMaterialIdUsingGETParams = {
     /** appId */
     appId: string;
+    /** materialId */
+    materialId: string;
   };
 
   type getMenuUsingGETParams = {
     /** appId */
     appId: string;
-  };
-
-  type getNotificationByIdUsingGETParams = {
-    /** id */
-    id?: number;
-  };
-
-  type getNotificationVOUsingGETParams = {
-    /** domain */
-    domain: string;
-  };
-
-  type getPostVOByIdUsingGETParams = {
-    /** id */
-    id?: number;
   };
 
   type getUserByIdUsingGETParams = {
@@ -243,14 +164,14 @@ declare namespace API {
     id?: number;
   };
 
-  type infoUsingGET1Params = {
+  type getWxMpAccountVOByIdUsingGETParams = {
     /** id */
-    id: string;
+    id?: number;
   };
 
-  type infoUsingGETParams = {
+  type getWxMpReplyRuleVOByIdUsingGETParams = {
     /** id */
-    id: string;
+    id?: number;
   };
 
   type InputStream = true;
@@ -276,6 +197,46 @@ declare namespace API {
     sortOrder?: string;
   };
 
+  type listWxMpAccountByPageUsingGETParams = {
+    /** aesKey */
+    aesKey?: string;
+    /** 公众号appid */
+    appId?: string;
+    current?: number;
+    /** 公众号名称 */
+    name?: string;
+    pageSize?: number;
+    /** 密钥 */
+    secret?: string;
+    sortField?: string;
+    sortOrder?: string;
+    /** token */
+    token?: string;
+    /** 认证状态 */
+    verified?: boolean;
+  };
+
+  type listWxMpReplyRuleByPageUsingGETParams = {
+    /** 公众号appid */
+    appId?: string;
+    current?: number;
+    /** 菜单栏点击事件key */
+    eventKey?: string;
+    /** 关键字搜索 */
+    matchValue?: string;
+    pageSize?: number;
+    /** 回复内容 */
+    replyContent?: string;
+    /** 0 为关键词触发、1 为默认触发、2 为被关注触发、3 为菜单点击事件类型 */
+    replyType?: number;
+    /** 规则描述 */
+    ruleDescription?: string;
+    /** 规则名称 */
+    ruleName?: string;
+    sortField?: string;
+    sortOrder?: string;
+  };
+
   type LoginUserVO = {
     createTime?: string;
     id?: number;
@@ -288,13 +249,6 @@ declare namespace API {
 
   type MaterialDeleteRequest = {
     materialId?: string;
-  };
-
-  type materialVideoInfoUsingGETParams = {
-    /** appId */
-    appId: string;
-    /** materialId */
-    materialId: string;
   };
 
   type ModelAndView = {
@@ -375,96 +329,9 @@ declare namespace API {
     viewName?: string;
   };
 
-  type Notification = {
-    content?: string;
-    createTime?: string;
-    domain?: string;
-    endTime?: string;
-    id?: number;
-    isDelete?: number;
-    startTime?: string;
-    status?: number;
-    title?: string;
-    type?: string;
-    updateTime?: string;
-    userId?: number;
-  };
-
-  type NotificationAddRequest = {
-    content?: string;
-    domain?: string[];
-    endTime?: string;
-    startTime?: string;
-    status?: number;
-    title?: string;
-    type?: string;
-  };
-
-  type NotificationQueryRequest = {
-    content?: string;
-    current?: number;
-    domain?: string[];
-    endTime?: string;
-    id?: number;
-    pageSize?: number;
-    sortField?: string;
-    sortOrder?: string;
-    startTime?: string;
-    status?: number;
-    title?: string;
-    type?: string;
-  };
-
-  type NotificationUpdateRequest = {
-    content?: string;
-    domain?: string[];
-    endTime?: string;
-    id?: number;
-    startTime?: string;
-    status?: number;
-    title?: string;
-    type?: string;
-  };
-
-  type NotificationVO = {
-    content?: string;
-    endTime?: string;
-    id?: number;
-    startTime?: string;
-    title?: string;
-    type?: string;
-    updateTime?: string;
-  };
-
   type OrderItem = {
     asc?: boolean;
     column?: string;
-  };
-
-  type PageNotification_ = {
-    countId?: string;
-    current?: number;
-    maxLimit?: number;
-    optimizeCountSql?: boolean;
-    orders?: OrderItem[];
-    pages?: number;
-    records?: Notification[];
-    searchCount?: boolean;
-    size?: number;
-    total?: number;
-  };
-
-  type PagePostVO_ = {
-    countId?: string;
-    current?: number;
-    maxLimit?: number;
-    optimizeCountSql?: boolean;
-    orders?: OrderItem[];
-    pages?: number;
-    records?: PostVO[];
-    searchCount?: boolean;
-    size?: number;
-    total?: number;
   };
 
   type PageUser_ = {
@@ -493,46 +360,6 @@ declare namespace API {
     total?: number;
   };
 
-  type pageUsingGET1Params = {
-    /** 公众号appid */
-    appId?: string;
-    current?: number;
-    /** 菜单栏点击事件key */
-    eventKey?: string;
-    /** 关键字搜索 */
-    matchValue?: string;
-    pageSize?: number;
-    /** 回复内容 */
-    replyContent?: string;
-    /** 0 为关键词触发、1 为默认触发、2 为被关注触发、3 为菜单点击事件类型 */
-    replyType?: number;
-    /** 规则描述 */
-    ruleDescription?: string;
-    /** 规则名称 */
-    ruleName?: string;
-    sortField?: string;
-    sortOrder?: string;
-  };
-
-  type pageUsingGETParams = {
-    /** aesKey */
-    aesKey?: string;
-    /** 公众号appid */
-    appId?: string;
-    current?: number;
-    /** 公众号名称 */
-    name?: string;
-    pageSize?: number;
-    /** 密钥 */
-    secret?: string;
-    sortField?: string;
-    sortOrder?: string;
-    /** token */
-    token?: string;
-    /** 认证状态 */
-    verified?: boolean;
-  };
-
   type PageWxAccountVO_ = {
     countId?: string;
     current?: number;
@@ -559,98 +386,9 @@ declare namespace API {
     total?: number;
   };
 
-  type PostAddRequest = {
-    content?: string;
-    tags?: string[];
-    title?: string;
-  };
-
-  type PostEditRequest = {
-    content?: string;
-    id?: number;
-    tags?: string[];
-    title?: string;
-  };
-
-  type PostFavourAddRequest = {
-    postId?: number;
-  };
-
-  type PostFavourQueryRequest = {
-    current?: number;
-    pageSize?: number;
-    postQueryRequest?: PostQueryRequest;
-    sortField?: string;
-    sortOrder?: string;
-    userId?: number;
-  };
-
-  type PostQueryRequest = {
-    content?: string;
-    current?: number;
-    favourUserId?: number;
-    id?: number;
-    notId?: number;
-    orTags?: string[];
-    pageSize?: number;
-    searchText?: string;
-    sortField?: string;
-    sortOrder?: string;
-    tags?: string[];
-    title?: string;
-    userId?: number;
-  };
-
-  type PostThumbAddRequest = {
-    postId?: number;
-  };
-
-  type PostUpdateRequest = {
-    content?: string;
-    id?: number;
-    tags?: string[];
-    title?: string;
-  };
-
-  type postUsingPOSTParams = {
-    /** appId */
-    appId: string;
-    /** encrypt_type */
-    encrypt_type?: string;
-    /** msg_signature */
-    msg_signature?: string;
-    /** nonce */
-    nonce: string;
-    /** openid */
-    openid: string;
-    /** signature */
-    signature: string;
-    /** timestamp */
-    timestamp: string;
-  };
-
-  type PostVO = {
-    content?: string;
-    createTime?: string;
-    favourNum?: number;
-    hasFavour?: boolean;
-    hasThumb?: boolean;
-    id?: number;
-    tagList?: string[];
-    thumbNum?: number;
-    title?: string;
-    updateTime?: string;
-    user?: UserVO;
-    userId?: number;
-  };
-
   type updateMenuUsingPOSTParams = {
     /** appId */
     appId: string;
-  };
-
-  type uploadFileUsingPOSTParams = {
-    biz?: string;
   };
 
   type uploadMaterialUsingPOSTParams = {
@@ -680,11 +418,6 @@ declare namespace API {
     userAvatar?: string;
     userName?: string;
     userRole?: string;
-  };
-
-  type userLoginByWxOpenUsingGETParams = {
-    /** code */
-    code: string;
   };
 
   type UserLoginRequest = {

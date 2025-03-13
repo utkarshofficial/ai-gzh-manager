@@ -1,5 +1,5 @@
 import { WX_ACCOUNT_GUIDE_COLUMNS } from '@/constants/WxAccountGuide';
-import { deleteUsingPost } from '@/services/backend/gongzhonghaozhanghaoguanli';
+import { deleteWxMpAccountByIdsUsingPOST } from '@/services/backend/wxAccountController';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message, Modal } from 'antd';
@@ -33,7 +33,7 @@ const WxAccountGuide: React.FC = () => {
       cancelText: '取消',
       onOk: async () => {
         try {
-          const result = await deleteUsingPost([record.appId as string]);
+          const result = await deleteWxMpAccountByIdsUsingPOST([record.appId as string]);
           if (result.code === 0) {
             message.success('删除成功');
             fetchWxAccountList();

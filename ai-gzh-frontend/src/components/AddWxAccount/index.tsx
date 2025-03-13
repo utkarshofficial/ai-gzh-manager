@@ -1,5 +1,5 @@
 import { ACCOUNTS_FIELDS_CONFIG } from '@/constants/addWxAccount';
-import { saveUsingPost } from '@/services/backend/gongzhonghaozhanghaoguanli';
+import { addWxMpAccountUsingPOST } from '@/services/backend/wxAccountController';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
@@ -36,7 +36,7 @@ const AddWxAccount: React.FC<AddWxAccountProps> = (props) => {
   const handleAdd = async (values: API.WxAccountAddDTO) => {
     const hide = message.loading('正在添加');
     try {
-      const result = await saveUsingPost(values);
+      const result = await addWxMpAccountUsingPOST(values);
       hide();
       if (result.code === 0) {
         message.success('新增公众号成功');

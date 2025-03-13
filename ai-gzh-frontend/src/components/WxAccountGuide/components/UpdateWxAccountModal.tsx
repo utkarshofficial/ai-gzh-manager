@@ -1,5 +1,5 @@
 import { ACCOUNTS_FIELDS_CONFIG } from '@/constants/addWxAccount';
-import { updateUsingPost } from '@/services/backend/gongzhonghaozhanghaoguanli';
+import { updateWxMpAccountUsingPOST } from '@/services/backend/wxAccountController';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { message } from 'antd';
 import React from 'react';
@@ -53,7 +53,7 @@ const UpdateWxAccountModal: React.FC<UpdateWxAccountModalProps> = ({
         aesKey: formValues.aesKey,
       };
 
-      const result = await updateUsingPost(updateData);
+      const result = await updateWxMpAccountUsingPOST(updateData);
       hide();
       if (result.code === 0) {
         message.success('更新成功');

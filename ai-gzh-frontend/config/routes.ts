@@ -12,7 +12,6 @@ export default [
     icon: 'message',
     name: '菜单管理',
     component: './Menu',
-    access: 'canUser',
   },
   {
     path: '/admin',

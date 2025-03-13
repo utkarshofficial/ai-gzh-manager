@@ -3,7 +3,7 @@
 import { request } from '@umijs/max';
 
 /** 删除菜单 注意这里是全部删除 POST /api/wx/menu/delete/${param0} */
-export async function deleteMenuUsingPost(
+export async function deleteMenuUsingPOST(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.deleteMenuUsingPOSTParams,
   options?: { [key: string]: any },
@@ -17,7 +17,7 @@ export async function deleteMenuUsingPost(
 }
 
 /** 获取公众号菜单 GET /api/wx/menu/get/${param0} */
-export async function getMenuUsingGet(
+export async function getMenuUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getMenuUsingGETParams,
   options?: { [key: string]: any },
@@ -31,7 +31,7 @@ export async function getMenuUsingGet(
 }
 
 /** 获取菜单类型 GET /api/wx/menu/get/type */
-export async function getMenuTypeUsingGet(options?: { [key: string]: any }) {
+export async function getMenuTypeUsingGET(options?: { [key: string]: any }) {
   return request<API.BaseResponseArrayWxMenuButtonTypeEnum_>('/api/wx/menu/get/type', {
     method: 'GET',
     ...(options || {}),
@@ -39,7 +39,7 @@ export async function getMenuTypeUsingGet(options?: { [key: string]: any }) {
 }
 
 /** 更新菜单 POST /api/wx/menu/update/${param0} */
-export async function updateMenuUsingPost(
+export async function updateMenuUsingPOST(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.updateMenuUsingPOSTParams,
   body: API.WxMenuButtonDTO[],

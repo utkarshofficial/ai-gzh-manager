@@ -1,4 +1,7 @@
-import { deleteUsingPost, pageUsingGet } from '@/services/backend/gongzhonghaozhanghaoguanli';
+import {
+  deleteWxMpAccountByIdsUsingPOST,
+  listWxMpAccountByPageUsingGET,
+} from '@/services/backend/wxAccountController';
 import { message } from 'antd';
 import { useCallback, useState } from 'react';
 
@@ -20,7 +23,7 @@ export default () => {
   const fetchWxAccountList = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await pageUsingGet({
+      const res = await listWxMpAccountByPageUsingGET({
         pageSize: 100, // 设置较大的页面大小，确保能获取所有公众号
         current: 1,
       });
@@ -69,7 +72,7 @@ export default () => {
       }
 
       // 调用删除接口
-      const result = await deleteUsingPost(appIds);
+      const result = await deleteWxMpAccountByIdsUsingPOST(appIds);
 
       if (result.code === 0 && result.data) {
         // 清空本地状态

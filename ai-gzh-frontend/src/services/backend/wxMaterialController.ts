@@ -3,7 +3,7 @@
 import { request } from '@umijs/max';
 
 /** 删除素材 POST /api/wx/material/${param0}/delete */
-export async function deleteMaterialUsingPost(
+export async function deleteMaterialUsingPOST(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.deleteMaterialUsingPOSTParams,
   body: API.MaterialDeleteRequest,
@@ -21,22 +21,8 @@ export async function deleteMaterialUsingPost(
   });
 }
 
-/** 获取素材类型 GET /api/wx/material/${param0}/get/type */
-export async function getMaterialTypeUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getMaterialTypeUsingGETParams,
-  options?: { [key: string]: any },
-) {
-  const { appId: param0, ...queryParams } = params;
-  return request<API.BaseResponseArrayWxMaterialTypeEnum_>(`/api/wx/material/${param0}/get/type`, {
-    method: 'GET',
-    params: { ...queryParams },
-    ...(options || {}),
-  });
-}
-
 /** 下载图片或音频 GET /api/wx/material/${param0}/img_voice/download */
-export async function downloadImgAndVoiceMaterialUsingGet(
+export async function downloadImgAndVoiceMaterialUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.downloadImgAndVoiceMaterialUsingGETParams,
   options?: { [key: string]: any },
@@ -52,7 +38,7 @@ export async function downloadImgAndVoiceMaterialUsingGet(
 }
 
 /** 查询素材列表 GET /api/wx/material/${param0}/list */
-export async function listAllMaterialUsingGet(
+export async function listAllMaterialUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.listAllMaterialUsingGETParams,
   options?: { [key: string]: any },
@@ -71,7 +57,7 @@ export async function listAllMaterialUsingGet(
 }
 
 /** 上传素材（图片、音频、视频） POST /api/wx/material/${param0}/upload */
-export async function uploadMaterialUsingPost(
+export async function uploadMaterialUsingPOST(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.uploadMaterialUsingPOSTParams,
   body: {},
@@ -89,15 +75,10 @@ export async function uploadMaterialUsingPost(
     const item = (body as any)[ele];
 
     if (item !== undefined && item !== null) {
-      if (typeof item === 'object' && !(item instanceof File)) {
-        if (item instanceof Array) {
-          item.forEach((f) => formData.append(ele, f || ''));
-        } else {
-          formData.append(ele, JSON.stringify(item));
-        }
-      } else {
-        formData.append(ele, item);
-      }
+      formData.append(
+        ele,
+        typeof item === 'object' && !(item instanceof File) ? JSON.stringify(item) : item,
+      );
     }
   });
 
@@ -113,9 +94,9 @@ export async function uploadMaterialUsingPost(
 }
 
 /** 查询视频详情 GET /api/wx/material/${param0}/video/info */
-export async function materialVideoInfoUsingGet(
+export async function getMaterialVideoByMaterialIdUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.materialVideoInfoUsingGETParams,
+  params: API.getMaterialVideoByMaterialIdUsingGETParams,
   options?: { [key: string]: any },
 ) {
   const { appId: param0, ...queryParams } = params;
@@ -129,4 +110,12 @@ export async function materialVideoInfoUsingGet(
       ...(options || {}),
     },
   );
+}
+
+/** 获取素材类型 GET /api/wx/material/get/type */
+export async function getMaterialTypeUsingGET(options?: { [key: string]: any }) {
+  return request<API.BaseResponseArrayWxMaterialTypeEnum_>('/api/wx/material/get/type', {
+    method: 'GET',
+    ...(options || {}),
+  });
 }
