@@ -11,7 +11,8 @@ import './index.less';
 const ImageList: React.FC = () => {
   const { currentWxAccount } = useModel('myWxAccount');
   // 从 model 中获取数据
-  const { materialList, fetchMaterialList } = useModel('myWxMaterial');
+  const { materialList, fetchMaterialList, totalCount, pagination, loading } =
+    useModel('myWxMaterial');
 
   return (
     <div className="image-list-container">
@@ -26,6 +27,15 @@ const ImageList: React.FC = () => {
             lg: 4,
             xl: 6,
             xxl: 6,
+          }}
+          loading={loading}
+          pagination={{
+            pageSize: 18,
+            total: totalCount,
+            current: pagination.current,
+            onChange: (page, pageSize) => {
+              fetchMaterialList({ current: page, pageSize });
+            },
           }}
           dataSource={materialList}
           renderItem={(item) => (

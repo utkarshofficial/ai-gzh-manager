@@ -30,7 +30,7 @@ export default () => {
   // 分页信息
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 24,
+    pageSize: 18,
   });
 
   // 获取当前选中的公众号
