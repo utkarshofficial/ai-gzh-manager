@@ -36,7 +36,10 @@ export const requestConfig: RequestConfig = {
       const requestPath: string = response.config.url ?? '';
 
       // 响应
-      const { data } = response as unknown as ResponseStructure;
+      const { data, config }: any = response as unknown as ResponseStructure;
+      if (config.getResponse) {
+        return response;
+      }
       if (!data) {
         throw new Error('服务异常');
       }

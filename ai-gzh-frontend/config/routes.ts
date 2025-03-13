@@ -8,11 +8,18 @@ export default [
     ],
   },
   {
+    path: '/material',
+    icon: 'file',
+    name: '素材管理',
+    component: './Material',
+  },
+  {
     path: '/menu',
     icon: 'message',
     name: '菜单管理',
     component: './Menu',
   },
+
   {
     path: '/admin',
     icon: 'crown',
@@ -23,6 +30,6 @@ export default [
       { icon: 'table', path: '/admin/user', component: './Admin/User', name: '用户管理' },
     ],
   },
-  { path: '/', redirect: '/menu' },
+  { path: '/', redirect: '/material' },
   { path: '*', layout: false, component: './404' },
 ];
