@@ -1,5 +1,7 @@
 package com.yuyuan.wxmp.service.impl;
 
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,14 +10,21 @@ import com.yuyuan.wxmp.common.ErrorCode;
 import com.yuyuan.wxmp.common.PageRequest;
 import com.yuyuan.wxmp.exception.BusinessException;
 import com.yuyuan.wxmp.mapper.WxReplyRuleMapper;
+import com.yuyuan.wxmp.model.dto.wxmpreplyrule.WxReplyContentDTO;
+import com.yuyuan.wxmp.model.dto.wxmpreplyrule.WxReplyMatchValueDTO;
 import com.yuyuan.wxmp.model.dto.wxmpreplyrule.WxReplyRulePageQueryRequest;
 import com.yuyuan.wxmp.model.entity.User;
 import com.yuyuan.wxmp.model.entity.WxReplyRule;
+import com.yuyuan.wxmp.model.enums.WxReplyContentTypeEnum;
+import com.yuyuan.wxmp.model.enums.WxReplyMatchTypeEnum;
+import com.yuyuan.wxmp.model.enums.WxReplyRuleTypeEnum;
 import com.yuyuan.wxmp.model.vo.WxReplyRuleVO;
 import com.yuyuan.wxmp.service.UserService;
 import com.yuyuan.wxmp.service.WxReplyRuleService;
 import com.yuyuan.wxmp.utils.WrapperUtil;
 import lombok.RequiredArgsConstructor;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -100,6 +109,109 @@ public class WxReplyRuleServiceImpl extends ServiceImpl<WxReplyRuleMapper, WxRep
         queryWrapper.like(StringUtils.isNotBlank(ruleDescription), "ruleDescription", ruleDescription);
         WrapperUtil.handleOrder(queryWrapper, sorterList, sortField, sortOrder);
         return queryWrapper;
+    }
+
+
+    @Override
+    public WxReplyContentDTO receiveMessageReply(String appId, String msg) {
+        // 1、将所有的关键词规则和默认规则都查询出来
+        List<WxReplyRule> wxReplyRuleList = this.list(
+                Wrappers.lambdaQuery(WxReplyRule.class)
+                        .eq(WxReplyRule::getAppId, appId)
+                        .in(
+                                WxReplyRule::getReplyType,
+                                WxReplyRuleTypeEnum.KEYWORDS.getValue(), WxReplyRuleTypeEnum.DEFAULT.getValue()
+                        )
+                        .orderByDesc(WxReplyRule::getUpdateTime)
+        );
+
+        // 2、将关键词规则都过滤出来
+        WxReplyRule keyWordReply = wxReplyRuleList
+                .stream()
+                .filter(wxReplyRule -> {
+                    if (!WxReplyRuleTypeEnum.KEYWORDS.getValue().equals(wxReplyRule.getReplyType())) {
+                        return false;
+                    }
+                    List<WxReplyMatchValueDTO> keywords = JSONUtil.toList(wxReplyRule.getMatchValue(), WxReplyMatchValueDTO.class);
+                    // 查看当前规则的关键字是否包含在用户发送的信息中
+                    for (WxReplyMatchValueDTO keyword : keywords) {
+                        String matchKeyWords = keyword.getMatchKeyWords();
+                        Integer matchType = keyword.getMatchType();
+                        if (StringUtils.isBlank(matchKeyWords)) {
+                            continue;
+                        }
+                        if (WxReplyMatchTypeEnum.ALL.getValue().equals(matchType) && matchKeyWords.equalsIgnoreCase(msg)) {
+                            return true;
+                        }
+                        if (WxReplyMatchTypeEnum.LIKE.getValue().equals(matchType) && msg.toLowerCase().contains(matchKeyWords.toLowerCase())) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .findFirst()
+                .orElse(null);
+
+        // 3、如果没有匹配上的关键词，则返回默认回复内容
+        if (ObjectUtils.isEmpty(keyWordReply)) {
+            List<WxReplyRule> defaultList = wxReplyRuleList
+                    .stream()
+                    .filter(wxReplyRule -> WxReplyRuleTypeEnum.DEFAULT.getValue().equals(wxReplyRule.getReplyType()))
+                    .collect(Collectors.toList());
+
+            // 4、如果默认规则也没有，则返回程序指定的文案
+            if (ObjectUtils.isEmpty(defaultList)) {
+                return null;
+            }
+            return JSONUtil.toBean(RandomUtil.randomEle(defaultList).getReplyContent(), WxReplyContentDTO.class);
+        }
+
+        // 5、直接回复
+        return JSONUtil.toBean(keyWordReply.getReplyContent(), WxReplyContentDTO.class);
+    }
+
+    @Override
+    public WxReplyContentDTO replySubscribe(String appId) {
+        List<WxReplyRule> wxReplyRuleList = this.list(
+                Wrappers.lambdaQuery(WxReplyRule.class)
+                        .eq(WxReplyRule::getAppId, appId)
+                        .eq(WxReplyRule::getReplyType, WxReplyRuleTypeEnum.SUBSCRIBE.getValue())
+        );
+        if (ObjectUtils.isEmpty(wxReplyRuleList)) {
+            return null;
+        }
+        // 随机选择一个
+        return JSONUtil.toBean(RandomUtil.randomEle(wxReplyRuleList).getReplyContent(), WxReplyContentDTO.class);
+    }
+
+    @Override
+    public WxMpXmlOutMessage replyByContentType(WxMpXmlMessage wxMpXmlMessage, WxReplyContentDTO replyContent, WxReplyContentTypeEnum contentTypeEnum) {
+        return switch (contentTypeEnum) {
+            case TEXT -> WxMpXmlOutMessage
+                    .TEXT()
+                    .content(replyContent.getTextContent())
+                    .fromUser(wxMpXmlMessage.getToUser())
+                    .toUser(wxMpXmlMessage.getFromUser())
+                    .build();
+            case IMAGE -> WxMpXmlOutMessage
+                    .IMAGE()
+                    .mediaId(replyContent.getMediaId())
+                    .fromUser(wxMpXmlMessage.getToUser())
+                    .toUser(wxMpXmlMessage.getFromUser())
+                    .build();
+            case VOICE -> WxMpXmlOutMessage
+                    .VOICE()
+                    .mediaId(replyContent.getMediaId())
+                    .fromUser(wxMpXmlMessage.getToUser())
+                    .toUser(wxMpXmlMessage.getFromUser())
+                    .build();
+            case VIDEO -> WxMpXmlOutMessage
+                    .VIDEO()
+                    .mediaId(replyContent.getMediaId())
+                    .fromUser(wxMpXmlMessage.getToUser())
+                    .toUser(wxMpXmlMessage.getFromUser())
+                    .build();
+        };
     }
 }
 
