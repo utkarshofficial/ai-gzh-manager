@@ -31,8 +31,10 @@ const MaterialPage: React.FC = () => {
   // 当素材类型变化时，获取对应的素材列表
   useEffect(() => {
     if (currentMaterialType && currentWxAccount?.appId && currentMaterialType) {
+      console.log(currentWxAccount?.appId, 'currentWxAccount?.appId');
+
       fetchMaterialList({
-        AccountId: currentWxAccount?.id?.toString() || '',
+        AccountId: currentWxAccount?.appId?.toString() || '',
         materialType: currentMaterialType,
       });
     }
@@ -83,7 +85,7 @@ const MaterialPage: React.FC = () => {
                     currentMaterialType={currentMaterialType || ''}
                     onSuccess={() =>
                       fetchMaterialList({
-                        AccountId: currentWxAccount?.id?.toString() || '',
+                        AccountId: currentWxAccount?.appId?.toString() || '',
                         materialType: currentMaterialType || '',
                       })
                     }

@@ -44,6 +44,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     logo: '/logo.png',
     waterMarkProps: {
       content: initialState?.currentUser?.userName,
+      fontColor: 'rgba(0, 0, 0, 0.06)',
+      fontSize: 16,
+      zIndex: 9,
+      rotate: -22,
     },
     footerRender: () => <Footer />,
     menuHeaderRender: undefined,

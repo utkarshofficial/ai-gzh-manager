@@ -25,7 +25,12 @@ export default [
     name: '菜单管理',
     component: './Menu',
   },
-
+  {
+    path: '/account',
+    icon: 'appstore',
+    name: '公众号管理',
+    component: './Account',
+  },
   {
     path: '/admin',
     icon: 'crown',

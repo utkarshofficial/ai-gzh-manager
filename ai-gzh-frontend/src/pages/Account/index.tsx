@@ -1,27 +1,24 @@
 import AddWxAccount from '@/components/AddWxAccount';
 import ClearWxAccounts from '@/components/ClearWxAccounts';
+import WxAccountGuide from '@/components/WxAccountGuide';
 import WxAccountSelector from '@/components/WxAccountSelector';
-import WxMenuEditor from '@/pages/Menu/components/WxMenuEditor';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Card, Divider, Empty, Space } from 'antd';
+import { Card, Divider, Space } from 'antd';
 import React, { useEffect } from 'react';
 
 /**
- * 菜单管理页面
+ * 公众号管理页面
  */
-const MenuPage: React.FC = () => {
-  const { wxAccountList, currentWxAccount, fetchWxAccountList } = useModel('myWxAccount');
-
-  // 初始化获取公众号列表
+const WxAccountPage: React.FC = () => {
+  const { fetchWxAccountList } = useModel('myWxAccount');
   useEffect(() => {
     fetchWxAccountList();
-  }, [fetchWxAccountList]);
-
+  }, []);
   return (
     <PageContainer title={false}>
       <Card
-        title="菜单管理"
+        title="公众号管理"
         extra={
           <Space split={<Divider type="vertical" />}>
             <ClearWxAccounts
@@ -38,19 +35,10 @@ const MenuPage: React.FC = () => {
           </Space>
         }
       >
-        {wxAccountList.length === 0 ? (
-          <Empty description="暂无公众号，请先添加公众号" />
-        ) : (
-          <WxMenuEditor
-            appId={currentWxAccount?.appId}
-            onSuccess={() => {
-              // 菜单操作成功后的回调
-            }}
-          />
-        )}
+        <WxAccountGuide />
       </Card>
     </PageContainer>
   );
 };
 
-export default MenuPage;
+export default WxAccountPage;

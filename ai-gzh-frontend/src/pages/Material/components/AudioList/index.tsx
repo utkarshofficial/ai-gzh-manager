@@ -101,7 +101,7 @@ const AudioList: React.FC = () => {
                       materialId={item.mediaId || ''}
                       onSuccess={() =>
                         fetchMaterialList({
-                          AccountId: currentWxAccount?.id?.toString() || '',
+                          AccountId: currentWxAccount?.appId?.toString() || '',
                           materialType: currentMaterialType || '',
                         })
                       }

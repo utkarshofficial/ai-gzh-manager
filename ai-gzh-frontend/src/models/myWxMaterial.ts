@@ -83,7 +83,7 @@ export default () => {
     setLoading(true);
     try {
       const res = await listAllMaterialUsingGET({
-        appId: currentWxAccount?.appId || params?.AccountId || '',
+        appId: params?.AccountId || currentWxAccount?.appId || '',
         materialType,
         current: params?.current || pagination.current,
         pageSize: params?.pageSize || pagination.pageSize,
