@@ -3,9 +3,19 @@
  * @param binaryData 二进制数据
  * @param fileName 文件名
  */
-export const downloadBinaryFile = (binaryData: ArrayBuffer, fileName: string) => {
+export const downloadBinaryFile = (
+  binaryData: ArrayBuffer,
+  fileName: string,
+  type: 'image' | 'voice',
+) => {
+  const formatType = () => {
+    if (type === 'image') {
+      return 'image/jpeg';
+    }
+    return 'audio/mpeg';
+  };
   // 创建一个 Blob 对象
-  const blob = new Blob([binaryData]);
+  const blob = new Blob([binaryData], { type: formatType() });
 
   // 创建一个下载链接
   const link = document.createElement('a');

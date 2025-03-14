@@ -61,3 +61,8 @@ interface BaseResponse<T> {
 interface InitialState {
   currentUser?: API.LoginUserVO;
 }
+
+/**
+ * 下载类型
+ */
+type DownloadType = 'image' | 'audio' | 'video';

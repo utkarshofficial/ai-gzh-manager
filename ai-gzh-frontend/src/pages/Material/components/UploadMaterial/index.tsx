@@ -26,6 +26,8 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
   modalTitle = '上传素材',
   acceptFileTypes = 'image/*',
 }) => {
+  console.log(currentMaterialType, 'currentMaterialType');
+
   // 控制上传弹窗的显示
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   // 上传文件列表
@@ -48,6 +50,8 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
   const beforeUpload = (file: RcFile) => {
     // 使用公共验证方法验证文件
     const isValid = validateFile(file, currentMaterialType, acceptFileTypes);
+    console.log(isValid, 'isValid');
+
     if (isValid) {
       // 添加到文件列表，但不自动上传
       setFileList([file]);

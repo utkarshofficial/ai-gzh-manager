@@ -12,6 +12,7 @@ interface DownloadButtonProps {
   showIcon?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  type?: 'image' | 'voice';
 }
 
 // 定义响应类型接口
@@ -35,6 +36,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
   showIcon = true,
   className,
   style,
+  type = 'image',
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -62,7 +64,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
           responseType: 'arraybuffer',
         },
       )) as unknown as ResponseWithData;
-      downloadBinaryFile(response.data, fileName);
+      downloadBinaryFile(response.data, fileName, type);
 
       message.success('下载成功');
     } catch (error) {
