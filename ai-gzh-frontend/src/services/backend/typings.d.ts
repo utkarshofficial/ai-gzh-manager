@@ -615,8 +615,7 @@ declare namespace API {
     eventKey?: string;
     /** 匹配值（关键字的key） */
     matchValue?: WxReplyMatchValueDTO[];
-    /** 回复内容 */
-    replyContent: WxReplyContentDTO[];
+    replyContent: WxReplyContentDTO;
     /** 0 为关键词触发、1 为默认触发、2 为被关注触发、3 为菜单点击事件类型 */
     replyType: number;
     /** 规则描述 */
@@ -639,8 +638,7 @@ declare namespace API {
     id: number;
     /** 匹配值（关键字或者事件的key） */
     matchValue?: WxReplyMatchValueDTO[];
-    /** 回复内容 */
-    replyContent?: WxReplyContentDTO[];
+    replyContent?: WxReplyContentDTO;
     /** 0 为关键词触发、1 为默认触发、2 为被关注触发、3 为菜单点击事件类型 */
     replyType?: number;
     /** 规则描述 */
@@ -655,7 +653,7 @@ declare namespace API {
     id?: number;
     /** 匹配值（关键字或者事件的key） */
     matchValue?: WxReplyMatchValueDTO[];
-    replyContent?: WxReplyContentDTO[];
+    replyContent?: WxReplyContentDTO;
     replyType?: number;
     ruleDescription?: string;
     ruleName?: string;

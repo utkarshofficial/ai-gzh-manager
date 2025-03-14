@@ -14,8 +14,14 @@ export default [
     component: './Material',
   },
   {
-    path: '/menu',
+    path: '/autoReply',
     icon: 'message',
+    name: '自动回复管理',
+    component: './AutoReply',
+  },
+  {
+    path: '/menu',
+    icon: 'menu',
     name: '菜单管理',
     component: './Menu',
   },

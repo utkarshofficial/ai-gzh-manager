@@ -19,7 +19,7 @@ const MaterialPage: React.FC = () => {
   const { materialTypes, loading, fetchMaterialTypes, fetchMaterialList } =
     useModel('myWxMaterial');
 
-  // 页面加载时获取公众号列表和素材类型
+  // 页面加载时获取公众号列表
   useEffect(() => {
     fetchWxAccountList();
   }, []);
