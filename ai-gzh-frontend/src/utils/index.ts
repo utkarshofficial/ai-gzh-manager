@@ -9,10 +9,10 @@ export const downloadBinaryFile = (
   type: 'image' | 'voice',
 ) => {
   const formatType = () => {
-    if (type === 'image') {
-      return 'image/jpeg';
+    if (type === 'voice') {
+      return 'audio/mpeg';
     }
-    return 'audio/mpeg';
+    return 'image/jpeg';
   };
   // 创建一个 Blob 对象
   const blob = new Blob([binaryData], { type: formatType() });

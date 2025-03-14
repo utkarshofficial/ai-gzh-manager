@@ -4,7 +4,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { useModel, useSearchParams } from '@umijs/max';
 import { Card, Divider, Empty, Space, Spin, Tabs } from 'antd';
 import React, { useEffect } from 'react';
-import { AudioList, ImageList, UploadMaterial } from './components';
+import { AudioList, ImageList, UploadMaterial, VideoList } from './components';
 import { getAcceptFileTypes } from './components/UploadMaterial/utils';
 
 /**
@@ -47,6 +47,10 @@ const MaterialPage: React.FC = () => {
 
     if (type === 'voice') {
       return <AudioList />;
+    }
+
+    if (type === 'video') {
+      return <VideoList />;
     }
 
     // 其他类型暂时显示空状态

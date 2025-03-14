@@ -12,6 +12,12 @@ const VOICE_TYPES = ['audio/mp3', 'audio/wma', 'audio/wav', 'audio/amr', 'audio/
 // 音频大小限制（2MB）
 const VOICE_MAX_SIZE = 2 * 1024 * 1024;
 
+// 视频类型常量
+const VIDEO_TYPES = ['video/mp4'];
+
+// 视频大小限制（10MB）
+const VIDEO_MAX_SIZE = 10 * 1024 * 1024;
+
 /**
  * 获取上传提示文本
  * @param acceptFileTypes 接受文件类型
@@ -40,6 +46,9 @@ export const getAcceptFileTypes = (currentMaterialType: string, acceptFileTypes:
   }
   if (currentMaterialType === 'voice') {
     return '.mp3,.wma,.wav,.amr';
+  }
+  if (currentMaterialType === 'video') {
+    return '.mp4';
   }
   return acceptFileTypes;
 };
@@ -74,9 +83,6 @@ export const validateFile = (
       return false;
     }
   } else if (currentMaterialType === 'voice') {
-    // 检查音频格式
-    console.log(file.type, 'file.type');
-
     const isValidVoiceType = VOICE_TYPES.includes(file.type.toLowerCase());
     if (!isValidVoiceType) {
       message.error('只支持 mp3/wma/wav/amr 格式的音频');
@@ -87,6 +93,20 @@ export const validateFile = (
     const isValidSize = file.size <= VOICE_MAX_SIZE;
     if (!isValidSize) {
       message.error('音频大小不能超过 2M');
+      return false;
+    }
+  } else if (currentMaterialType === 'video') {
+    // 检查视频格式
+    const isValidVideoType = VIDEO_TYPES.includes(file.type);
+    if (!isValidVideoType) {
+      message.error('只支持 mp4 格式的视频');
+      return false;
+    }
+
+    // 检查视频大小
+    const isValidSize = file.size <= VIDEO_MAX_SIZE;
+    if (!isValidSize) {
+      message.error('视频大小不能超过 10MB');
       return false;
     }
   } else {
