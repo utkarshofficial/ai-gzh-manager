@@ -40,6 +40,14 @@ spring:
   jackson:
     time-zone: Asia/Shanghai
 
+  ai:
+    openai:
+      api-key: your apiKey
+      base-url: https://api.deepseek.com
+      chat:
+        options:
+          model: deepseek-chat
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

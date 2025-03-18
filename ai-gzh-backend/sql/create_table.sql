@@ -61,3 +61,17 @@ create table if not exists `wx_reply_rule`
     index idx_appId (appId),
     index idx_userId (userId)
 ) comment '微信公众号回复规则';
+
+create table if not exists `ai_reply_record`
+(
+    `id`           bigint auto_increment comment 'id' primary key,
+    `appId`        char(20)                           not null comment '接收到消息的公众号 appId',
+    `fromUser`     varchar(50)                        not null comment ' 发送用户',
+    `message`      varchar(2048)                      not null comment '用户发送消息',
+    `replyMessage` varchar(2048)                      null comment '回复消息',
+    `replyStatus`  tinyint  default 0                 not null comment '回复状态，0 - 未回复、1 - 已回复',
+    `createTime`   datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    `updateTime`   datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    index idx_appId (appId),
+    index idx_fromUser (fromUser)
+) comment 'AI 回复内容记录';
