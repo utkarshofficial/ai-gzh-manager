@@ -102,7 +102,7 @@ public class WxMaterialController {
             wxMpMaterial.setName(originalFilename);
             wxMpMaterial.setFile(file);
             wxMpMaterial.setVideoTitle(originalFilename);
-            wxMpService.switchover(appId);
+//            wxMpService.switchover(appId);
             wxMpService.getMaterialService().materialFileUpload(materialType, wxMpMaterial);
             return ResultUtils.success(true);
         } catch (Exception e) {
@@ -124,7 +124,7 @@ public class WxMaterialController {
     @Operation(summary = "删除素材")
     public BaseResponse<Boolean> deleteMaterial(@PathVariable String appId, @RequestBody MaterialDeleteRequest materialDeleteRequest, HttpServletRequest request) throws WxErrorException, IOException {
         String materialId = materialDeleteRequest.getMaterialId();
-        wxMpService.switchover(appId);
+//        wxMpService.switchover(appId);
         return ResultUtils.success(wxMpService.getMaterialService().materialDelete(materialId));
     }
 
@@ -137,7 +137,7 @@ public class WxMaterialController {
         int pageSize = (int) wxMaterialQueryRequest.getPageSize();
         int offset = (current - 1) * pageSize;
 
-        wxMpService.switchover(appId);
+//        wxMpService.switchover(appId);
         return ResultUtils.success(wxMpService.getMaterialService().materialFileBatchGet(materialType, offset, pageSize));
     }
 
@@ -145,7 +145,7 @@ public class WxMaterialController {
     @Operation(summary = "查询视频详情")
     public BaseResponse<WxMpMaterialVideoInfoResult> getMaterialVideoByMaterialId(@PathVariable String appId, @RequestParam String materialId) throws WxErrorException {
         ThrowUtils.throwIf(StringUtils.isBlank(materialId), ErrorCode.PARAMS_ERROR);
-        wxMpService.switchover(appId);
+//        wxMpService.switchover(appId);
         return ResultUtils.success(wxMpService.getMaterialService().materialVideoInfo(materialId));
     }
 
@@ -153,7 +153,7 @@ public class WxMaterialController {
     @Operation(summary = "下载图片或音频")
     public ResponseEntity<InputStreamResource> downloadImgAndVoiceMaterial(@PathVariable String appId, String materialId, String fileName) throws WxErrorException {
         ThrowUtils.throwIf(StringUtils.isAnyBlank(materialId, fileName), ErrorCode.PARAMS_ERROR);
-        wxMpService.switchover(appId);
+//        wxMpService.switchover(appId);
         try (InputStream inputStream = wxMpService.getMaterialService().materialImageOrVoiceDownload(materialId)) {
             InputStreamResource resource = new InputStreamResource(inputStream);
             return ResponseEntity.ok()

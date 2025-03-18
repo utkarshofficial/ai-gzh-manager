@@ -47,7 +47,7 @@ public class WxMpPortalController {
 
         ThrowUtils.throwIf(StringUtils.isAnyBlank(signature, timestamp, nonce, echoStr), ErrorCode.PARAMS_ERROR);
 
-        this.wxService.switchoverTo(appId);
+//        this.wxService.switchoverTo(appId);
         if (wxService.checkSignature(timestamp, nonce, signature)) {
             // 设置公众号的认证状态
             wxAccountService.update(
@@ -71,7 +71,7 @@ public class WxMpPortalController {
                        @RequestParam("openid") String openId,
                        @RequestParam(name = "encrypt_type", required = false) String encType,
                        @RequestParam(name = "msg_signature", required = false) String msgSignature) {
-        this.wxService.switchoverTo(appId);
+//        this.wxService.switchoverTo(appId);
 
         ThrowUtils.throwIf(!wxService.checkSignature(timestamp, nonce, signature), ErrorCode.PARAMS_ERROR, "非法请求，可能属于伪造的请求！");
 

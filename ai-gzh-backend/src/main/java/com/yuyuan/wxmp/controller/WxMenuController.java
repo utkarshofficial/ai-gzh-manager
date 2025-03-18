@@ -43,7 +43,7 @@ public class WxMenuController {
     @GetMapping("/get/{appId}")
     @Operation(summary = "获取公众号菜单")
     public BaseResponse<WxMpMenu> getMenu(@PathVariable String appId) throws WxErrorException {
-        wxMpService.switchoverTo(appId);
+//        wxMpService.switchoverTo(appId);
         return ResultUtils.success(wxMpService.getMenuService().menuGet());
     }
 
@@ -53,7 +53,7 @@ public class WxMenuController {
     @PostMapping("/update/{appId}")
     @Operation(summary = "更新菜单")
     public BaseResponse<Boolean> updateMenu(@PathVariable String appId, @RequestBody List<WxMenuButton> wxMenuButtonList) throws WxErrorException {
-        wxMpService.switchoverTo(appId);
+//        wxMpService.switchoverTo(appId);
         WxMenu wxMenu = new WxMenu();
         wxMenu.setButtons(wxMenuButtonList);
         wxMpService.getMenuService().menuCreate(wxMenu);
@@ -64,7 +64,7 @@ public class WxMenuController {
     @PostMapping("/delete/{appId}")
     @Operation(summary = "删除菜单", description = "注意这里是全部删除")
     public BaseResponse<Boolean> deleteMenu(@PathVariable String appId) throws WxErrorException {
-        wxMpService.switchoverTo(appId);
+//        wxMpService.switchoverTo(appId);
         wxMpService.getMenuService().menuDelete();
         return ResultUtils.success(true);
     }
