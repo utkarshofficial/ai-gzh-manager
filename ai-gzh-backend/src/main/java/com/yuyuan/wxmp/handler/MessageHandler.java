@@ -1,6 +1,8 @@
 package com.yuyuan.wxmp.handler;
 
 
+import com.yuyuan.wxmp.constant.RedisConstant;
+import com.yuyuan.wxmp.manager.DistributedLockManager;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.yuyuan.wxmp.model.dto.wxmpreplyrule.WxReplyContentDTO;
 import com.yuyuan.wxmp.model.entity.AiReplyRecord;
@@ -39,6 +41,8 @@ public class MessageHandler implements WxMpMessageHandler {
 
     private final AiReplyRecordService aiReplyRecordService;
 
+    private final DistributedLockManager distributedLockManager;
+
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map,
                                     WxMpService wxMpService, WxSessionManager wxSessionManager) {
@@ -49,8 +53,9 @@ public class MessageHandler implements WxMpMessageHandler {
                 .fromUser(wxMpXmlMessage.getToUser())
                 .toUser(fromUser)
                 .build();
-        // 针对公众号和用户加锁，避免用户短时间内发送同一条信息导致 AI 回复了多次
-        synchronized ((appId + fromUser + DigestUtil.md5Hex(userMessage)).intern()) {
+        // 针对公众号和用户加锁，避免用户短时间内发送同一条信息导致 AI 回复了多次（分布式场景下，原本的 synchronized 就失效了）
+        String lock = RedisConstant.MESSAGE_REPLY_LOCK + appId + ":" + fromUser + ":" + DigestUtil.md5Hex(userMessage);
+        return distributedLockManager.nonBlockExecute(lock, () -> {
             WxReplyContentDTO replyContent = wxReplyRuleService.receiveMessageReply(appId, userMessage);
             if (ObjectUtils.isEmpty(replyContent)) {
                 AiReplyRecord replyRecord = aiReplyRecordService.lambdaQuery()
@@ -99,6 +104,6 @@ public class MessageHandler implements WxMpMessageHandler {
                         .build();
             }
             return wxReplyRuleService.replyByContentType(wxMpXmlMessage, replyContent, contentTypeEnum);
-        }
+        }, () -> defaultReplyMessage);
     }
 }
