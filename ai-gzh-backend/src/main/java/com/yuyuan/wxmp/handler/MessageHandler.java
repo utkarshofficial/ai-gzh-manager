@@ -18,10 +18,10 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutTextMessage;
 import me.chanjar.weixin.mp.util.WxMpConfigStorageHolder;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-
 
 
 /**
@@ -66,8 +66,15 @@ public class MessageHandler implements WxMpMessageHandler {
                     aiReplyRecord.setFromUser(fromUser);
                     aiReplyRecord.setMessage(userMessage);
                     aiReplyRecordService.save(aiReplyRecord);
-                    aiReplyRecordService.aiReply(appId, fromUser, userMessage, aiReplyRecord);
-                    return defaultReplyMessage;
+                    String content = aiReplyRecordService.aiReply(appId, fromUser, userMessage, aiReplyRecord);
+                    if (StringUtils.isBlank(content)) {
+                        // 如果回复消息为空，代表此时没有 AI 回复
+                        return defaultReplyMessage;
+                    }
+                    return WxMpXmlOutMessage.TEXT().content(content)
+                            .fromUser(wxMpXmlMessage.getToUser())
+                            .toUser(fromUser)
+                            .build();
                 }
                 if (ObjectUtils.isEmpty(replyRecord.getReplyMessage())) {
                     // 如果回复消息为空，代表此时没有 AI 回复
