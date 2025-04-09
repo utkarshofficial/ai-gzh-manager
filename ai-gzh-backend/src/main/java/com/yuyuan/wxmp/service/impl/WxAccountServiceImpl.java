@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yuyuan.wxmp.common.ErrorCode;
 import com.yuyuan.wxmp.common.PageRequest;
+import com.yuyuan.wxmp.constant.MqConstant;
 import com.yuyuan.wxmp.exception.BusinessException;
 import com.yuyuan.wxmp.exception.ThrowUtils;
 import com.yuyuan.wxmp.mapper.WxAccountMapper;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +49,7 @@ public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount
 
     private final WxMpService wxMpService;
     private final UserService userService;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public Page<WxAccountVO> getPage(Page<WxAccount> wxAccountPage, QueryWrapper<WxAccount> wxAccountQueryWrapper) {
@@ -137,6 +140,8 @@ public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount
     @Override
     public Boolean deleteByAppIds(List<String> appIds) {
         // 先删除wxJava里的数据
+        rabbitTemplate.convertAndSend(MqConstant.REMOVE_WXMP_CONFIG_EXCHANGE,
+                "", appIds);
 //        appIds.forEach(wxMpService::removeConfigStorage);
 
         // 再删除数据库里的数据
@@ -174,6 +179,8 @@ public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount
     }
 
     private synchronized void addAccountToRuntime(WxAccount wxAccount) {
+        rabbitTemplate.convertAndSend(MqConstant.ADD_WXMP_CONFIG_EXCHANGE,
+                "", wxAccount);
 //        String appId = wxAccount.getAppId();
 //        WxMpDefaultConfigImpl config = wxAccount.toWxMpConfigStorage();
 //        try {

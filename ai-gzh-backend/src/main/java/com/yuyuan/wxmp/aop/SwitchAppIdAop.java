@@ -1,8 +1,5 @@
 package com.yuyuan.wxmp.aop;
 
-import com.yuyuan.wxmp.common.ErrorCode;
-import com.yuyuan.wxmp.exception.BusinessException;
-import com.yuyuan.wxmp.model.entity.WxAccount;
 import com.yuyuan.wxmp.service.WxAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,12 +42,13 @@ public class SwitchAppIdAop {
                     appId = (String) args[i];
                     log.info("当前使用的 appId：{}", appId);
                     // 切换公众号
-                    wxMpService.switchover(appId, mpAppId -> wxAccountService.lambdaQuery()
-                            .eq(WxAccount::getAppId, mpAppId)
-                            .oneOpt()
-                            .orElseThrow(() -> new BusinessException(ErrorCode.OPERATION_ERROR, String.format("当前公众号服务【%s】不存在，请稍后再试", mpAppId)))
-                            .toWxMpConfigStorage()
-                    );
+                    wxMpService.switchover(appId);
+//                    wxMpService.switchover(appId, mpAppId -> wxAccountService.lambdaQuery()
+//                            .eq(WxAccount::getAppId, mpAppId)
+//                            .oneOpt()
+//                            .orElseThrow(() -> new BusinessException(ErrorCode.OPERATION_ERROR, String.format("当前公众号服务【%s】不存在，请稍后再试", mpAppId)))
+//                            .toWxMpConfigStorage()
+//                    );
                     break;
                 }
             }
@@ -58,7 +56,7 @@ public class SwitchAppIdAop {
         Object result = joinPoint.proceed();
         if (ObjectUtils.isNotEmpty(appId)) {
             // 如果存在 appId，则在线程执行完毕后移除配置，避免空间浪费
-            wxMpService.removeConfigStorage(appId);
+//            wxMpService.removeConfigStorage(appId);
         }
         return result;
     }

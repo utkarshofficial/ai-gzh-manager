@@ -48,6 +48,13 @@ spring:
         options:
           model: deepseek-chat
 
+  rabbitmq:
+    host: localhost
+    username: admin
+    password: admin
+
+
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
