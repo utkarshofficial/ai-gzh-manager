@@ -23,8 +23,6 @@ import com.yuyuan.wxmp.utils.WrapperUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.config.WxMpConfigStorage;
-import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -139,7 +137,7 @@ public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount
     @Override
     public Boolean deleteByAppIds(List<String> appIds) {
         // 先删除wxJava里的数据
-        appIds.forEach(wxMpService::removeConfigStorage);
+//        appIds.forEach(wxMpService::removeConfigStorage);
 
         // 再删除数据库里的数据
         return this.remove(
@@ -176,16 +174,16 @@ public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount
     }
 
     private synchronized void addAccountToRuntime(WxAccount wxAccount) {
-        String appId = wxAccount.getAppId();
-        WxMpDefaultConfigImpl config = wxAccount.toWxMpConfigStorage();
-        try {
-            wxMpService.addConfigStorage(appId, config);
-        } catch (NullPointerException e) {
-            log.info("初始化configStorageMap...");
-            Map<String, WxMpConfigStorage> configStorages = new HashMap<>(6);
-            configStorages.put(appId, config);
-            wxMpService.setMultiConfigStorages(configStorages, appId);
-        }
+//        String appId = wxAccount.getAppId();
+//        WxMpDefaultConfigImpl config = wxAccount.toWxMpConfigStorage();
+//        try {
+//            wxMpService.addConfigStorage(appId, config);
+//        } catch (NullPointerException e) {
+//            log.info("初始化configStorageMap...");
+//            Map<String, WxMpConfigStorage> configStorages = new HashMap<>(6);
+//            configStorages.put(appId, config);
+//            wxMpService.setMultiConfigStorages(configStorages, appId);
+//        }
     }
 
     private boolean isAccountInRuntime(String appid) {
