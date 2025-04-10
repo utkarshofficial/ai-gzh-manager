@@ -1,7 +1,7 @@
 import { uploadMaterialUsingPOST } from '@/services/backend/wxMaterialController';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Modal, Upload, UploadFile, message } from 'antd';
-import { RcFile } from 'antd/es/upload';
+import { type RcFile } from 'antd/es/upload';
 import React, { useState } from 'react';
 import './index.less';
 import { getAcceptFileTypes, getUploadTips, validateFile } from './utils';
@@ -10,8 +10,6 @@ interface UploadMaterialProps {
   appId: string; // 微信appId
   currentMaterialType: string; // 当前素材类型
   onSuccess?: () => void; // 上传成功回调
-  buttonText?: string; // 按钮文本
-  modalTitle?: string; // 弹窗标题
   acceptFileTypes?: string; // 接受文件类型
 }
 
@@ -22,12 +20,8 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
   appId,
   currentMaterialType,
   onSuccess,
-  buttonText = '上传素材',
-  modalTitle = '上传素材',
   acceptFileTypes = 'image/*',
 }) => {
-  console.log(currentMaterialType, 'currentMaterialType');
-
   // 控制上传弹窗的显示
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   // 上传文件列表
@@ -128,10 +122,10 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
   return (
     <>
       <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-        {buttonText}
+        上传素材
       </Button>
 
-      <Modal title={modalTitle} open={isModalVisible} onCancel={handleCancel} footer={modalFooter}>
+      <Modal title={'上传素材'} open={isModalVisible} onCancel={handleCancel} footer={modalFooter}>
         <div className="uploadContainer">
           <Upload
             listType="picture-card"

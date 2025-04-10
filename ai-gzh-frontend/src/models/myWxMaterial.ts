@@ -112,8 +112,8 @@ export default () => {
    * 切换分页
    */
   const changePagination = useCallback(
-    (current: number, pageSize: number) => {
-      fetchMaterialList({ current, pageSize });
+    (current: number, pageSize: number, materialType: string) => {
+      fetchMaterialList({ current, pageSize, materialType });
     },
     [fetchMaterialList],
   );

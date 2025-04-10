@@ -1,4 +1,4 @@
-import { useModel } from '@umijs/max';
+import { useModel, useSearchParams } from '@umijs/max';
 import { Card, Empty, Image, List, Typography } from 'antd';
 import React from 'react';
 import DeleteButton from '../DeleteButton';
@@ -11,8 +11,10 @@ import './index.less';
 const ImageList: React.FC = () => {
   const { currentWxAccount } = useModel('myWxAccount');
   // 从 model 中获取数据
-  const { materialList, fetchMaterialList, totalCount, pagination, loading } =
+  const { materialList, fetchMaterialList, totalCount, pagination, loading, changePagination } =
     useModel('myWxMaterial');
+  const [searchParams] = useSearchParams();
+  const currentMaterialType = searchParams.get('tab');
 
   return (
     <div className="image-list-container">
@@ -34,7 +36,7 @@ const ImageList: React.FC = () => {
             total: totalCount,
             current: pagination.current,
             onChange: (page, pageSize) => {
-              fetchMaterialList({ current: page, pageSize });
+              changePagination(page, pageSize, currentMaterialType || '');
             },
           }}
           dataSource={materialList}

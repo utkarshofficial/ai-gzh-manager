@@ -112,7 +112,6 @@ const ContentTypeForm: React.FC<ContentTypeFormProps> = ({
           rules={[{ required: true, message: `请选择${getMaterialTypeName(selectedContentType)}` }]}
         >
           <Select
-            defaultOpen
             placeholder={`请选择${getMaterialTypeName(selectedContentType)}`}
             loading={loadingMaterial}
             showSearch

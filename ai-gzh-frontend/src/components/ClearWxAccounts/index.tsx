@@ -5,18 +5,6 @@ import React from 'react';
 
 interface ClearWxAccountsProps {
   /**
-   * 按钮类型
-   */
-  buttonType?: 'default' | 'primary' | 'link' | 'text' | 'dashed';
-  /**
-   * 按钮文字
-   */
-  buttonText?: string;
-  /**
-   * 按钮危险样式
-   */
-  danger?: boolean;
-  /**
    * 清空成功后的回调函数
    */
   onSuccess?: () => void;
@@ -35,14 +23,7 @@ interface ClearWxAccountsProps {
  * 点击后会弹出确认对话框，确认后清空所有公众号
  */
 const ClearWxAccounts: React.FC<ClearWxAccountsProps> = (props) => {
-  const {
-    buttonType = 'default',
-    buttonText = '清空公众号',
-    danger = true,
-    onSuccess,
-    style,
-    className,
-  } = props;
+  const { onSuccess, style, className } = props;
 
   // 使用数据流
   const { clearAllWxAccounts, wxAccountList } = useModel('myWxAccount');
@@ -78,14 +59,14 @@ const ClearWxAccounts: React.FC<ClearWxAccountsProps> = (props) => {
 
   return (
     <Button
-      type={buttonType}
-      danger={danger}
+      type={'default'}
+      danger={true}
       onClick={handleClear}
       icon={<DeleteOutlined />}
       style={style}
       className={className}
     >
-      {buttonText}
+      清空公众号
     </Button>
   );
 };

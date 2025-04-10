@@ -148,12 +148,12 @@ const WxMenuEditor: React.FC<WxMenuEditorProps> = ({ appId, onSuccess }) => {
 
   return (
     <>
-      <Space style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={() => handleSave()} loading={saving}>
-          保存菜单
-        </Button>
+      <Space style={{ width: '100%', marginBottom: 16, justifyContent: 'flex-end' }}>
         <Button danger onClick={handleDelete} disabled={saving}>
           删除全部菜单
+        </Button>
+        <Button type="primary" onClick={() => handleSave()} loading={saving}>
+          保存菜单
         </Button>
       </Space>
       {!appId ? (

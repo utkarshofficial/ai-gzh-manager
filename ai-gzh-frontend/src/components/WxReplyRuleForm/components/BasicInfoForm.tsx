@@ -47,7 +47,7 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
         </Select>
       </Form.Item>
 
-      {/* 菜单点击事件类型时显示事件Key输入 */}
+      {/* 菜单点击事件类型时显示事件 Key 输入 */}
       {selectedReplyType === REPLY_TYPE.MENU_CLICK && (
         <Form.Item
           name="eventKey"

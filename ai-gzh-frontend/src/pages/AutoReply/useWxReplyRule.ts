@@ -1,8 +1,5 @@
 import {
   deleteWxReplyRuleByIdsUsingPOST,
-  getWxReplyContentTypeUsingGET,
-  getWxReplyMatchTypeUsingGET,
-  getWxReplyTypeUsingGET,
   listWxMpReplyRuleByPageUsingGET,
 } from '@/services/backend/wxReplyRuleController';
 import { message } from 'antd';
@@ -15,12 +12,6 @@ import { useCallback, useState } from 'react';
 const useWxReplyRule = () => {
   // 回复规则列表
   const [replyRuleList, setReplyRuleList] = useState<API.WxReplyRuleVO[]>([]);
-  // 回复规则类型列表
-  const [replyTypeList, setReplyTypeList] = useState<API.WxReplyRuleTypeEnum[]>([]);
-  // 关键字匹配类型列表
-  const [matchTypeList, setMatchTypeList] = useState<API.WxReplyMatchTypeEnum[]>([]);
-  // 回复内容类型列表
-  const [contentTypeList, setContentTypeList] = useState<API.WxReplyContentTypeEnum[]>([]);
   // 加载状态
   const [loading, setLoading] = useState<boolean>(false);
   // 分页信息
@@ -61,48 +52,6 @@ const useWxReplyRule = () => {
   );
 
   /**
-   * 获取回复规则类型列表
-   */
-  const fetchReplyTypeList = useCallback(async () => {
-    try {
-      const res = await getWxReplyTypeUsingGET();
-      if (res.code === 0 && res.data) {
-        setReplyTypeList(res.data);
-      }
-    } catch (error) {
-      console.error('获取回复规则类型列表失败:', error);
-    }
-  }, []);
-
-  /**
-   * 获取关键字匹配类型列表
-   */
-  const fetchMatchTypeList = useCallback(async () => {
-    try {
-      const res = await getWxReplyMatchTypeUsingGET();
-      if (res.code === 0 && res.data) {
-        setMatchTypeList(res.data);
-      }
-    } catch (error) {
-      console.error('获取关键字匹配类型列表失败:', error);
-    }
-  }, []);
-
-  /**
-   * 获取回复内容类型列表
-   */
-  const fetchContentTypeList = useCallback(async () => {
-    try {
-      const res = await getWxReplyContentTypeUsingGET();
-      if (res.code === 0 && res.data) {
-        setContentTypeList(res.data);
-      }
-    } catch (error) {
-      console.error('获取回复内容类型列表失败:', error);
-    }
-  }, []);
-
-  /**
    * 删除回复规则
    * @param ids 要删除的规则ID数组
    */
@@ -127,13 +76,6 @@ const useWxReplyRule = () => {
   }, []);
 
   /**
-   * 初始化所有枚举数据
-   */
-  const initEnumData = useCallback(async () => {
-    await Promise.all([fetchReplyTypeList(), fetchMatchTypeList(), fetchContentTypeList()]);
-  }, [fetchReplyTypeList, fetchMatchTypeList, fetchContentTypeList]);
-
-  /**
    * 处理表格分页变化
    */
   const handleTableChange = useCallback(
@@ -154,14 +96,10 @@ const useWxReplyRule = () => {
 
   return {
     replyRuleList,
-    replyTypeList,
-    matchTypeList,
-    contentTypeList,
     loading,
     pagination,
     fetchReplyRuleList,
     deleteReplyRules,
-    initEnumData,
     handleTableChange,
   };
 };

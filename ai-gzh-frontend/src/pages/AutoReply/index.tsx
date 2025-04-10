@@ -11,7 +11,7 @@ import {
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Button, Card, Divider, Popconfirm, Space, Tag, Tooltip, message } from 'antd';
+import { Button, Card, Divider, Modal, Popconfirm, Space, Tag, Tooltip, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import useWxReplyRule from './useWxReplyRule';
 
@@ -22,16 +22,18 @@ const AutoReplyPage: React.FC = () => {
   // 获取公众号数据
   const { fetchWxAccountList, currentWxAccount } = useModel('myWxAccount');
   // 获取自动回复规则数据
-  const { replyTypeList, matchTypeList, contentTypeList, deleteReplyRules, initEnumData } =
-    useWxReplyRule();
+  const { deleteReplyRules } = useWxReplyRule();
+
+  const { replyTypeList, matchTypeList, contentTypeList, initEnumData } = useModel('autoReply');
 
   // 表格 action 引用
   const actionRef = useRef<ActionType>();
   // 控制添加/编辑规则表单的显示
   const [formVisible, setFormVisible] = useState(false);
-  // 当前编辑的规则ID
+  // 当前编辑的规则 ID
   const [currentRuleId, setCurrentRuleId] = useState<number | undefined>(undefined);
-
+  // 选中的规则 IDs
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // 页面加载时获取公众号列表和枚举数据
   useEffect(() => {
     fetchWxAccountList();
@@ -182,9 +184,9 @@ const AutoReplyPage: React.FC = () => {
           (contentType === 1 || contentType === 2 || contentType === 3) &&
           record.replyContent.mediaId
         ) {
-          content = `素材ID: ${record.replyContent.mediaId}`;
+          content = `素材 ID: ${record.replyContent.mediaId}`;
         } else if (contentType === 4 && record.replyContent.articleId) {
-          content = `图文ID: ${record.replyContent.articleId}`;
+          content = `图文 ID: ${record.replyContent.articleId}`;
         }
 
         return (
@@ -231,6 +233,25 @@ const AutoReplyPage: React.FC = () => {
     },
   ];
 
+  // 处理批量删除规则
+  const handleBatchDelete = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning('请至少选择一条规则');
+      return;
+    }
+    // 弹窗确认删除
+    Modal.confirm({
+      title: '确定要删除这些规则吗？',
+      content: `确认删除 ${selectedRowKeys.length} 条规则吗？`,
+      onOk: async () => {
+        const success = await deleteReplyRules(selectedRowKeys as number[]);
+        if (success) {
+          setSelectedRowKeys([]);
+          actionRef.current?.reload();
+        }
+      },
+    });
+  };
   return (
     <PageContainer title={false}>
       <Card
@@ -261,9 +282,22 @@ const AutoReplyPage: React.FC = () => {
               xxl: 6,
             },
           }}
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (keys) => setSelectedRowKeys(keys),
+          }}
           toolBarRender={() => [
             <Button key="add" type="primary" icon={<PlusOutlined />} onClick={handleAddRule}>
               新建规则
+            </Button>,
+            <Button
+              key="batchDelete"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={handleBatchDelete}
+              disabled={selectedRowKeys.length === 0}
+            >
+              批量删除
             </Button>,
           ]}
           request={async (params, sort) => {

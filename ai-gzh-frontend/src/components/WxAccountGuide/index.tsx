@@ -11,8 +11,6 @@ import UpdateWxAccountModal from './components/UpdateWxAccountModal';
  */
 const WxAccountGuide: React.FC = () => {
   const { wxAccountList, loading, fetchWxAccountList } = useModel('myWxAccount');
-  // 是否显示更新弹窗
-  const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
   // 当前选中的公众号
   const [currentWxAccount, setCurrentWxAccount] = useState<API.WxAccountVO | undefined>(undefined);
 
@@ -53,7 +51,6 @@ const WxAccountGuide: React.FC = () => {
    */
   const handleUpdate = (record: API.WxAccountVO) => {
     setCurrentWxAccount(record);
-    setUpdateModalVisible(true);
   };
 
   const operateItem: ProColumns<API.WxAccountVO> = {
@@ -85,13 +82,11 @@ const WxAccountGuide: React.FC = () => {
 
       {/* 更新公众号弹窗 */}
       <UpdateWxAccountModal
-        visible={updateModalVisible}
+        visible={!!currentWxAccount?.id}
         onCancel={() => {
-          setUpdateModalVisible(false);
           setCurrentWxAccount(undefined);
         }}
         onSuccess={() => {
-          setUpdateModalVisible(false);
           setCurrentWxAccount(undefined);
           fetchWxAccountList();
         }}

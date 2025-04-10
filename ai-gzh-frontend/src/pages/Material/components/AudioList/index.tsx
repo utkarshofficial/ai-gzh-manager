@@ -13,7 +13,7 @@ import useAudioPlay from './useAudioPlay';
 const AudioList: React.FC = () => {
   const { currentWxAccount } = useModel('myWxAccount');
   // 从 model 中获取数据
-  const { materialList, fetchMaterialList, totalCount, pagination, loading } =
+  const { materialList, fetchMaterialList, totalCount, pagination, loading, changePagination } =
     useModel('myWxMaterial');
   const [searchParams] = useSearchParams();
   const currentMaterialType = searchParams.get('tab');
@@ -47,7 +47,7 @@ const AudioList: React.FC = () => {
                   total: totalCount,
                   current: pagination.current,
                   onChange: (page, pageSize) => {
-                    fetchMaterialList({ current: page, pageSize });
+                    changePagination(page, pageSize, currentMaterialType || '');
                   },
                 }
               : undefined

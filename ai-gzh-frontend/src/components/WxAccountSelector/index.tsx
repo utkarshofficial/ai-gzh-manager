@@ -10,26 +10,6 @@ interface WxAccountSelectorProps {
    * 选择器宽度
    */
   width?: number | string;
-  /**
-   * 选择器样式
-   */
-  style?: React.CSSProperties;
-  /**
-   * 选择器类名
-   */
-  className?: string;
-  /**
-   * 是否禁用
-   */
-  disabled?: boolean;
-  /**
-   * 选择器占位文本
-   */
-  placeholder?: string;
-  /**
-   * 选择器大小
-   */
-  size?: 'small' | 'middle' | 'large';
 }
 
 /**
@@ -37,14 +17,7 @@ interface WxAccountSelectorProps {
  * 展示公众号列表，支持切换当前选中的公众号
  */
 const WxAccountSelector: React.FC<WxAccountSelectorProps> = (props) => {
-  const {
-    width = 160,
-    style,
-    className,
-    disabled = false,
-    placeholder = '请选择公众号',
-    size = 'middle',
-  } = props;
+  const { width = 160 } = props;
   const { wxAccountList, currentWxAccount, setCurrentWxAccount, loading } = useModel('myWxAccount');
   // 切换当前选中的公众号
   const handleChange = (value: number) => {
@@ -58,11 +31,8 @@ const WxAccountSelector: React.FC<WxAccountSelectorProps> = (props) => {
     <Select
       value={currentWxAccount?.id}
       onChange={handleChange}
-      style={{ width, ...style }}
-      className={className}
-      disabled={disabled}
-      placeholder={placeholder}
-      size={size}
+      style={{ width }}
+      placeholder="请选择公众号"
       loading={loading}
       notFoundContent={loading ? <Spin size="small" /> : <Text type="secondary">暂无公众号</Text>}
     >

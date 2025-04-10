@@ -58,7 +58,7 @@ export default function useReplyForm(props: {
         const res = await listAllMaterialUsingGET({
           appId: currentWxAccount.appId,
           materialType,
-          pageSize: 20, // 每页加载20条
+          pageSize: 20, // 每页加载 20 条
           current: page,
         });
 
@@ -82,7 +82,7 @@ export default function useReplyForm(props: {
           return false;
         }
       } catch (error) {
-        console.error('获取素材列表失败:', error);
+        console.error('获取素材列表失败：', error);
         message.error('获取素材列表失败');
         if (!append) {
           setMaterialList([]);
@@ -127,7 +127,7 @@ export default function useReplyForm(props: {
         setContentTypeList(contentTypeRes.data);
       }
     } catch (error) {
-      console.error('获取枚举数据失败:', error);
+      console.error('获取枚举数据失败：', error);
       message.error('获取枚举数据失败');
     }
   }, []);
@@ -176,7 +176,7 @@ export default function useReplyForm(props: {
         }
         return false;
       } catch (error) {
-        console.error('获取规则详情失败:', error);
+        console.error('获取规则详情失败：', error);
         message.error('获取规则详情失败');
         return false;
       } finally {
@@ -247,13 +247,13 @@ export default function useReplyForm(props: {
 
       // 清空相关字段
       if (value === REPLY_TYPE.KEYWORD) {
-        // 关键词触发，清空事件Key
+        // 关键词触发，清空事件 Key
         form.setFieldValue('eventKey', undefined);
       } else if (value === REPLY_TYPE.MENU_CLICK) {
         // 菜单点击事件，清空匹配值
         form.setFieldValue('matchValue', []);
       } else {
-        // 其他类型，清空匹配值和事件Key
+        // 其他类型，清空匹配值和事件 Key
         form.setFieldValue('matchValue', []);
         form.setFieldValue('eventKey', undefined);
       }
@@ -296,7 +296,7 @@ export default function useReplyForm(props: {
   // 初始化枚举数据
   useEffect(() => {
     fetchEnumData();
-  }, [fetchEnumData]);
+  }, []);
 
   // 如果是编辑模式，获取规则详情
   useEffect(() => {
