@@ -2,12 +2,12 @@ import { uploadMaterialUsingPOST } from '@/services/backend/wxMaterialController
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Modal, Upload, UploadFile, message } from 'antd';
 import { type RcFile } from 'antd/es/upload';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.less';
 import { getAcceptFileTypes, getUploadTips, validateFile } from './utils';
 
 interface UploadMaterialProps {
-  appId: string; // 微信appId
+  appId: string; // 微信 appId
   currentMaterialType: string; // 当前素材类型
   onSuccess?: () => void; // 上传成功回调
   acceptFileTypes?: string; // 接受文件类型
@@ -36,6 +36,12 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
 
   // 关闭上传弹窗
   const handleCancel = () => {
+    // 清理所有创建的 URL
+    fileList.forEach((file) => {
+      if (file.url?.startsWith('blob:')) {
+        URL.revokeObjectURL(file.url);
+      }
+    });
     setIsModalVisible(false);
     setFileList([]);
   };
@@ -44,8 +50,6 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
   const beforeUpload = (file: RcFile) => {
     // 使用公共验证方法验证文件
     const isValid = validateFile(file, currentMaterialType, acceptFileTypes);
-    console.log(isValid, 'isValid');
-
     if (isValid) {
       // 添加到文件列表，但不自动上传
       setFileList([file]);
@@ -57,15 +61,40 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
 
   // 处理文件列表变化
   const handleChange = ({ fileList }: { fileList: UploadFile[] }) => {
-    // 为每个文件添加预览URL
-    const newFileList = fileList.map((file) => {
+    // 释放旧的 URL 以防止内存泄漏
+    fileList.forEach((file) => {
       if (file.originFileObj && !file.url) {
         file.url = URL.createObjectURL(file.originFileObj);
       }
-      return file;
     });
-    setFileList(newFileList);
+    setFileList(fileList);
   };
+
+  // 组件卸载时清理所有创建的 URL
+  useEffect(() => {
+    return () => {
+      // 组件卸载时清理
+      fileList.forEach((file) => {
+        if (file.url?.startsWith('blob:')) {
+          URL.revokeObjectURL(file.url);
+        }
+      });
+    };
+  }, []);
+
+  // 监听文件列表变化，清理不再需要的 URL
+  useEffect(() => {
+    const currentUrls = new Set(fileList.map((file) => file.url));
+
+    // 在文件列表更新时，比较前后状态，清理被移除文件的 URL
+    return () => {
+      fileList.forEach((file) => {
+        if (file.url && file.url.startsWith('blob:') && !currentUrls.has(file.url)) {
+          URL.revokeObjectURL(file.url);
+        }
+      });
+    };
+  }, [fileList]);
 
   // 执行上传操作
   const handleUpload = async () => {
@@ -73,18 +102,14 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
       message.warning('请先选择要上传的文件');
       return;
     }
-
     const file = fileList[0].originFileObj as File;
-
     setUploading(true);
-
     try {
       const response = await uploadMaterialUsingPOST(
         { appId, materialType: currentMaterialType },
         {}, // 可以在这里传递额外的参数
         file,
       );
-
       if (response.code === 0 && response.data) {
         message.success('上传成功');
         setFileList([]);
@@ -95,7 +120,7 @@ const UploadMaterial: React.FC<UploadMaterialProps> = ({
         message.error(response.message || '上传失败');
       }
     } catch (error) {
-      console.error('上传出错:', error);
+      console.error('上传出错：', error);
       message.error('上传失败，请稍后重试');
     } finally {
       setUploading(false);

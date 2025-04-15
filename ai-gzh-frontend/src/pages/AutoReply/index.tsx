@@ -1,7 +1,9 @@
-import AddWxAccount from '@/components/AddWxAccount';
-import WxAccountSelector from '@/components/WxAccountSelector';
+import BaseLayout from '@/components/BaseLayout';
 import WxReplyRuleForm from '@/components/WxReplyRuleForm';
-import { listWxMpReplyRuleByPageUsingGET } from '@/services/backend/wxReplyRuleController';
+import {
+  deleteWxReplyRuleByIdsUsingPOST,
+  listWxMpReplyRuleByPageUsingGET,
+} from '@/services/backend/wxReplyRuleController';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -9,21 +11,20 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Button, Card, Divider, Modal, Popconfirm, Space, Tag, Tooltip, message } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
-import useWxReplyRule from './useWxReplyRule';
+import { Button, Modal, Popconfirm, Tag, Tooltip, message } from 'antd';
+import { SortOrder } from 'antd/es/table/interface';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * 自动回复管理页面
  */
 const AutoReplyPage: React.FC = () => {
   // 获取公众号数据
-  const { fetchWxAccountList, currentWxAccount } = useModel('myWxAccount');
-  // 获取自动回复规则数据
-  const { deleteReplyRules } = useWxReplyRule();
-
+  const { currentWxAccount } = useModel('myWxAccount');
+  // 加载状态
+  const [loading, setLoading] = useState<boolean>(false);
   const { replyTypeList, matchTypeList, contentTypeList, initEnumData } = useModel('autoReply');
 
   // 表格 action 引用
@@ -34,9 +35,8 @@ const AutoReplyPage: React.FC = () => {
   const [currentRuleId, setCurrentRuleId] = useState<number | undefined>(undefined);
   // 选中的规则 IDs
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  // 页面加载时获取公众号列表和枚举数据
+  // 页面枚举数据
   useEffect(() => {
-    fetchWxAccountList();
     initEnumData();
   }, []);
 
@@ -57,6 +57,30 @@ const AutoReplyPage: React.FC = () => {
     setCurrentRuleId(undefined);
     setFormVisible(true);
   };
+
+  /**
+   * 删除回复规则
+   * @param ids 要删除的规则 ID 数组
+   */
+  const deleteReplyRules = useCallback(async (ids: number[]): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const res = await deleteWxReplyRuleByIdsUsingPOST(ids);
+      if (res.code === 0 && res.data) {
+        message.success('删除成功');
+        return true;
+      } else {
+        message.error(res.message || '删除失败');
+        return false;
+      }
+    } catch (error) {
+      console.error('删除回复规则失败：', error);
+      message.error('删除回复规则失败');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // 处理编辑规则
   const handleEditRule = (id: number) => {
@@ -252,108 +276,98 @@ const AutoReplyPage: React.FC = () => {
       },
     });
   };
+
+  const proTableRequest = async (
+    params: {
+      pageSize?: number;
+      current?: number;
+      keyword?: string;
+    } & API.WxReplyRuleVO,
+    sort: Record<string, SortOrder>,
+  ) => {
+    if (!currentWxAccount?.appId) {
+      return {
+        data: [],
+        success: true,
+        total: 0,
+      };
+    }
+
+    // 处理排序
+    const sortField = Object.keys(sort || {})[0];
+    const sortOrder = sortField ? (sort[sortField] === 'ascend' ? 'asc' : 'desc') : undefined;
+
+    // 构建查询参数
+    const queryParams: API.listWxMpReplyRuleByPageUsingGETParams = {
+      appId: currentWxAccount.appId,
+      current: params.current,
+      pageSize: params.pageSize,
+      ruleName: params.ruleName,
+      ruleDescription: params.ruleDescription,
+      replyType: params.replyType as number,
+      matchValue: params.matchValue as any,
+      sortField,
+      sortOrder,
+    };
+
+    try {
+      const result = await listWxMpReplyRuleByPageUsingGET(queryParams);
+      return {
+        data: result.data?.records || [],
+        success: result.code === 0,
+        total: result.data?.total || 0,
+      };
+    } catch (error) {
+      message.error('获取回复规则列表失败');
+      return {
+        data: [],
+        success: false,
+        total: 0,
+      };
+    }
+  };
   return (
-    <PageContainer title={false}>
-      <Card
-        title="自动回复管理"
-        extra={
-          <Space split={<Divider type="vertical" />}>
-            <AddWxAccount
-              onSuccess={() => {
-                fetchWxAccountList();
-              }}
-            />
-            <WxAccountSelector />
-          </Space>
-        }
-      >
-        <ProTable<API.WxReplyRuleVO>
-          headerTitle="回复规则列表"
-          actionRef={actionRef}
-          rowKey="id"
-          search={{
-            defaultColsNumber: 6,
-            span: {
-              xs: 24,
-              sm: 12,
-              md: 8,
-              lg: 6,
-              xl: 6,
-              xxl: 6,
-            },
-          }}
-          rowSelection={{
-            selectedRowKeys,
-            onChange: (keys) => setSelectedRowKeys(keys),
-          }}
-          toolBarRender={() => [
-            <Button key="add" type="primary" icon={<PlusOutlined />} onClick={handleAddRule}>
-              新建规则
-            </Button>,
-            <Button
-              key="batchDelete"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={handleBatchDelete}
-              disabled={selectedRowKeys.length === 0}
-            >
-              批量删除
-            </Button>,
-          ]}
-          request={async (params, sort) => {
-            if (!currentWxAccount?.appId) {
-              return {
-                data: [],
-                success: true,
-                total: 0,
-              };
-            }
-
-            // 处理排序
-            const sortField = Object.keys(sort || {})[0];
-            const sortOrder = sortField
-              ? sort[sortField] === 'ascend'
-                ? 'asc'
-                : 'desc'
-              : undefined;
-
-            // 构建查询参数
-            const queryParams: API.listWxMpReplyRuleByPageUsingGETParams = {
-              appId: currentWxAccount.appId,
-              current: params.current,
-              pageSize: params.pageSize,
-              ruleName: params.ruleName,
-              ruleDescription: params.ruleDescription,
-              replyType: params.replyType as number,
-              matchValue: params.matchValue as string,
-              sortField,
-              sortOrder,
-            };
-
-            try {
-              const result = await listWxMpReplyRuleByPageUsingGET(queryParams);
-              return {
-                data: result.data?.records || [],
-                success: result.code === 0,
-                total: result.data?.total || 0,
-              };
-            } catch (error) {
-              message.error('获取回复规则列表失败');
-              return {
-                data: [],
-                success: false,
-                total: 0,
-              };
-            }
-          }}
-          columns={columns}
-          pagination={{
-            showQuickJumper: true,
-            showSizeChanger: true,
-          }}
-        />
-      </Card>
-
+    <BaseLayout title="自动回复管理">
+      <ProTable<API.WxReplyRuleVO>
+        headerTitle="回复规则列表"
+        actionRef={actionRef}
+        rowKey="id"
+        search={{
+          defaultColsNumber: 6,
+          span: {
+            xs: 24,
+            sm: 12,
+            md: 8,
+            lg: 6,
+            xl: 6,
+            xxl: 6,
+          },
+        }}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (keys) => setSelectedRowKeys(keys),
+        }}
+        toolBarRender={() => [
+          <Button key="add" type="primary" icon={<PlusOutlined />} onClick={handleAddRule}>
+            新建规则
+          </Button>,
+          <Button
+            key="batchDelete"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={handleBatchDelete}
+            disabled={selectedRowKeys.length === 0 || loading}
+          >
+            批量删除
+          </Button>,
+        ]}
+        request={proTableRequest}
+        columns={columns}
+        pagination={{
+          showQuickJumper: true,
+          showSizeChanger: true,
+        }}
+      />
       {/* 添加/编辑规则表单 */}
       <WxReplyRuleForm
         visible={formVisible}
@@ -361,7 +375,7 @@ const AutoReplyPage: React.FC = () => {
         onSuccess={handleFormSuccess}
         ruleId={currentRuleId}
       />
-    </PageContainer>
+    </BaseLayout>
   );
 };
 

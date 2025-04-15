@@ -53,7 +53,7 @@ export default () => {
         }
       }
     } catch (error) {
-      console.error('获取素材类型列表失败:', error);
+      console.error('获取素材类型列表失败：', error);
       message.error('获取素材类型列表失败');
     } finally {
       setLoading(false);
@@ -100,7 +100,7 @@ export default () => {
         });
       }
     } catch (error: any) {
-      console.error('获取素材列表失败:', error);
+      console.error('获取素材列表失败：', error);
       message.error('获取素材列表失败' + error.message);
     } finally {
       setLoading(false);
@@ -115,7 +115,7 @@ export default () => {
     (current: number, pageSize: number, materialType: string) => {
       fetchMaterialList({ current, pageSize, materialType });
     },
-    [fetchMaterialList],
+    [],
   );
   return {
     materialTypes,

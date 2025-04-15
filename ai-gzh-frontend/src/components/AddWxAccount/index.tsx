@@ -23,7 +23,7 @@ interface AddWxAccountProps {
 /**
  * 新增公众号按钮组件
  * @param props 组件属性
- * @returns React组件
+ * @returns React 组件
  */
 const AddWxAccount: React.FC<AddWxAccountProps> = (props) => {
   const { onSuccess, buttonType = 'primary', buttonText = '新增公众号' } = props;

@@ -1,6 +1,6 @@
 import { downloadImgAndVoiceMaterialUsingGET } from '@/services/backend/wxMaterialController';
 import { message } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // 定义响应类型接口
 interface ResponseWithData {
@@ -16,7 +16,7 @@ interface ResponseWithData {
  * 音频播放自定义 Hook
  */
 export const useAudioPlay = () => {
-  // 当前播放的音频ID
+  // 当前播放的音频 ID
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
   // 音频元素引用
   const audioUrlRef = useRef<string | null>(null);
@@ -58,13 +58,22 @@ export const useAudioPlay = () => {
 
         setPlayingAudioId(item.mediaId);
       } catch (error) {
-        console.error('获取音频失败:', error);
+        console.error('获取音频失败：', error);
         message.error('获取音频失败，请稍后重试');
       } finally {
         setPlayLoading(null);
       }
     }
   };
+
+  useEffect(() => {
+    // 返回清理函数
+    return () => {
+      if (audioUrlRef.current) {
+        URL.revokeObjectURL(audioUrlRef.current);
+      }
+    };
+  }, []);
 
   return {
     playingAudioId,

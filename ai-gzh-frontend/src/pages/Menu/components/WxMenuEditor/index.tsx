@@ -45,7 +45,7 @@ const WxMenuEditor: React.FC<WxMenuEditorProps> = ({ appId, onSuccess }) => {
   // 添加一级菜单
   const addMainButton = () => {
     if (buttons.length >= 3) {
-      message.warning('一级菜单最多只能添加3个');
+      message.warning('一级菜单最多只能添加 3 个');
       return;
     }
 
@@ -76,7 +76,7 @@ const WxMenuEditor: React.FC<WxMenuEditorProps> = ({ appId, onSuccess }) => {
     }
 
     if (newButtons[index].subButtons!.length >= 5) {
-      message.warning('二级菜单最多只能添加5个');
+      message.warning('二级菜单最多只能添加 5 个');
       return;
     }
 
@@ -98,7 +98,7 @@ const WxMenuEditor: React.FC<WxMenuEditorProps> = ({ appId, onSuccess }) => {
         message.warning('请先选择公众号');
       }
     } catch (error) {
-      console.error('表单验证失败:', error);
+      console.error('表单验证失败：', error);
     }
   };
 
@@ -128,9 +128,7 @@ const WxMenuEditor: React.FC<WxMenuEditorProps> = ({ appId, onSuccess }) => {
 
     if (newButtons[mainIndex] && newButtons[mainIndex].subButtons) {
       newButtons[mainIndex].subButtons!.splice(subIndex, 1);
-      // setButtons(newButtons);
       await handleSave(newButtons);
-      // form.setFieldsValue({ buttons: newButtons });
     }
   };
 

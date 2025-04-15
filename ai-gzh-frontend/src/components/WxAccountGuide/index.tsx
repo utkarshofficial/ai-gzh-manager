@@ -7,11 +7,11 @@ import React, { useState } from 'react';
 import UpdateWxAccountModal from './components/UpdateWxAccountModal';
 
 /**
- * 公众号管理组件
+ * 公众号列表组件
  */
 const WxAccountGuide: React.FC = () => {
   const { wxAccountList, loading, fetchWxAccountList } = useModel('myWxAccount');
-  // 当前选中的公众号
+  // 用于存储当前正在编辑或准备更新的公众号信息
   const [currentWxAccount, setCurrentWxAccount] = useState<API.WxAccountVO | undefined>(undefined);
 
   /**
@@ -20,7 +20,7 @@ const WxAccountGuide: React.FC = () => {
    */
   const handleDelete = async (record: API.WxAccountVO) => {
     if (!record.id) {
-      message.error('公众号ID不存在');
+      message.error('公众号 ID 不存在');
       return;
     }
 
@@ -39,7 +39,7 @@ const WxAccountGuide: React.FC = () => {
             message.error(result.message || '删除失败');
           }
         } catch (error: any) {
-          message.error('删除失败: ' + error.message);
+          message.error('删除失败：' + error.message);
         }
       },
     });

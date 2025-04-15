@@ -3,9 +3,6 @@ import { listAllMaterialUsingGET } from '@/services/backend/wxMaterialController
 import {
   addWxReplyRuleUsingPOST,
   getWxMpReplyRuleVOByIdUsingGET,
-  getWxReplyContentTypeUsingGET,
-  getWxReplyMatchTypeUsingGET,
-  getWxReplyTypeUsingGET,
   updateWxReplyRuleUsingPOST,
 } from '@/services/backend/wxReplyRuleController';
 import { useModel } from '@umijs/max';
@@ -24,11 +21,8 @@ export default function useReplyForm(props: {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const { currentWxAccount } = useModel('myWxAccount');
-
-  // 枚举数据
-  const [replyTypeList, setReplyTypeList] = useState<API.WxReplyRuleTypeEnum[]>([]);
-  const [matchTypeList, setMatchTypeList] = useState<API.WxReplyMatchTypeEnum[]>([]);
-  const [contentTypeList, setContentTypeList] = useState<API.WxReplyContentTypeEnum[]>([]);
+  // 使用 autoReply 模型中的枚举数据
+  const { replyTypeList, matchTypeList, contentTypeList, initEnumData } = useModel('autoReply');
 
   // 选中的类型
   const [selectedReplyType, setSelectedReplyType] = useState<number>(REPLY_TYPE.KEYWORD);
@@ -105,32 +99,6 @@ export default function useReplyForm(props: {
     },
     [fetchMaterialList, selectedContentType],
   );
-
-  /**
-   * 获取枚举数据
-   */
-  const fetchEnumData = useCallback(async () => {
-    try {
-      const [replyTypeRes, matchTypeRes, contentTypeRes] = await Promise.all([
-        getWxReplyTypeUsingGET(),
-        getWxReplyMatchTypeUsingGET(),
-        getWxReplyContentTypeUsingGET(),
-      ]);
-
-      if (replyTypeRes.code === 0 && replyTypeRes.data) {
-        setReplyTypeList(replyTypeRes.data);
-      }
-      if (matchTypeRes.code === 0 && matchTypeRes.data) {
-        setMatchTypeList(matchTypeRes.data);
-      }
-      if (contentTypeRes.code === 0 && contentTypeRes.data) {
-        setContentTypeList(contentTypeRes.data);
-      }
-    } catch (error) {
-      console.error('获取枚举数据失败：', error);
-      message.error('获取枚举数据失败');
-    }
-  }, []);
 
   /**
    * 获取规则详情
@@ -295,8 +263,8 @@ export default function useReplyForm(props: {
 
   // 初始化枚举数据
   useEffect(() => {
-    fetchEnumData();
-  }, []);
+    initEnumData();
+  }, [initEnumData]);
 
   // 如果是编辑模式，获取规则详情
   useEffect(() => {
@@ -305,7 +273,7 @@ export default function useReplyForm(props: {
     }
   }, [visible, ruleId, fetchRuleDetail]);
 
-  // 当组件显示时，重置素材列表
+  // 重置素材列表
   useEffect(() => {
     if (!visible) {
       setMaterialList([]);

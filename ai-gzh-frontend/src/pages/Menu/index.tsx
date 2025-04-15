@@ -1,55 +1,28 @@
-import AddWxAccount from '@/components/AddWxAccount';
-import ClearWxAccounts from '@/components/ClearWxAccounts';
-import WxAccountSelector from '@/components/WxAccountSelector';
-import WxMenuEditor from '@/pages/Menu/components/WxMenuEditor';
-import { PageContainer } from '@ant-design/pro-components';
+import BaseLayout from '@/components/BaseLayout';
 import { useModel } from '@umijs/max';
-import { Card, Divider, Empty, Space } from 'antd';
-import React, { useEffect } from 'react';
+import { Empty } from 'antd';
+import React from 'react';
+import WxMenuEditor from './components/WxMenuEditor';
 
 /**
  * 菜单管理页面
  */
 const MenuPage: React.FC = () => {
-  const { wxAccountList, currentWxAccount, fetchWxAccountList } = useModel('myWxAccount');
-
-  // 初始化获取公众号列表
-  useEffect(() => {
-    fetchWxAccountList();
-  }, [fetchWxAccountList]);
+  const { wxAccountList, currentWxAccount } = useModel('myWxAccount');
 
   return (
-    <PageContainer title={false}>
-      <Card
-        title="菜单管理"
-        extra={
-          <Space split={<Divider type="vertical" />}>
-            <ClearWxAccounts
-              onSuccess={() => {
-                fetchWxAccountList();
-              }}
-            />
-            <AddWxAccount
-              onSuccess={() => {
-                fetchWxAccountList();
-              }}
-            />
-            <WxAccountSelector />
-          </Space>
-        }
-      >
-        {wxAccountList.length === 0 ? (
-          <Empty description="暂无公众号，请先添加公众号" />
-        ) : (
-          <WxMenuEditor
-            appId={currentWxAccount?.appId}
-            onSuccess={() => {
-              // 菜单操作成功后的回调
-            }}
-          />
-        )}
-      </Card>
-    </PageContainer>
+    <BaseLayout title="菜单管理">
+      {wxAccountList.length === 0 ? (
+        <Empty description="暂无公众号，请先添加公众号" />
+      ) : (
+        <WxMenuEditor
+          appId={currentWxAccount?.appId}
+          onSuccess={() => {
+            // 菜单操作成功后的回调
+          }}
+        />
+      )}
+    </BaseLayout>
   );
 };
 

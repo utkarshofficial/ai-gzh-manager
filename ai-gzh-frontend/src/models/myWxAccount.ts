@@ -44,14 +44,6 @@ export default () => {
   }, [currentWxAccount]);
 
   /**
-   * 切换当前选中的公众号
-   * @param wxAccount 要选中的公众号
-   */
-  const switchWxAccount = useCallback((wxAccount: API.WxAccountVO) => {
-    setCurrentWxAccount(wxAccount);
-  }, []);
-
-  /**
    * 清空所有公众号
    * @returns 是否清空成功
    */
@@ -98,7 +90,6 @@ export default () => {
     currentWxAccount,
     loading,
     fetchWxAccountList,
-    switchWxAccount,
     setCurrentWxAccount,
     clearAllWxAccounts,
   };

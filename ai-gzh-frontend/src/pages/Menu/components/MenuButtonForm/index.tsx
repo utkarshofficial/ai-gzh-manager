@@ -61,7 +61,15 @@ const MenuButtonForm: React.FC<MenuButtonFormProps> = ({
 
       {/* 所有类型都添加 url 字段，但只有 view 和 miniprogram 类型是必填的 */}
       <Form.Item name={[field.name, 'url']}>
-        <Input placeholder={buttonType === 'miniprogram' ? '备用链接地址' : '链接地址'} />
+        <Input
+          placeholder={
+            buttonType === 'miniprogram'
+              ? '备用链接地址'
+              : buttonType === 'view'
+              ? '链接地址'
+              : '菜单KEY'
+          }
+        />
       </Form.Item>
 
       {buttonType === 'miniprogram' && (
