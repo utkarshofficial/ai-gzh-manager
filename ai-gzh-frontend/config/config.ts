@@ -29,17 +29,17 @@ export default defineConfig({
   /**
    * @name 主题的配置
    * @description 虽然叫主题，但是其实只是 less 的变量设置
-   * @doc antd的主题设置 https://ant.design/docs/react/customize-theme-cn
-   * @doc umi 的theme 配置 https://umijs.org/docs/api/config#theme
+   * @doc antd 的主题设置 https://ant.design/docs/react/customize-theme-cn
+   * @doc umi 的 theme 配置 https://umijs.org/docs/api/config#theme
    */
   theme: {
     // 如果不想要 configProvide 动态设置主题需要把这个设置为 default
-    // 只有设置为 variable， 才能使用 configProvide 动态设置主色调
+    // 只有设置为 variable，才能使用 configProvide 动态设置主色调
     'root-entry-name': 'variable',
   },
   /**
    * @name moment 的国际化配置
-   * @description 如果对国际化没有要求，打开之后能减少js的包大小
+   * @description 如果对国际化没有要求，打开之后能减少 js 的包大小
    * @doc https://umijs.org/docs/api/config#ignoremomentlocale
    */
   ignoreMomentLocale: true,
@@ -56,7 +56,7 @@ export default defineConfig({
    * @description 一个不错的热更新组件，更新时可以保留 state
    */
   fastRefresh: true,
-  //============== 以下都是max的插件配置 ===============
+  //============== 以下都是 max 的插件配置 ===============
   /**
    * @name 数据流插件
    * @@doc https://umijs.org/docs/max/data-flow
@@ -122,7 +122,7 @@ export default defineConfig({
   presets: ['umi-presets-pro'],
   /**
    * @name openAPI 插件的配置
-   * @description 基于 openapi 的规范生成serve 和mock，能减少很多样板代码
+   * @description 基于 openapi 的规范生成 serve 和 mock，能减少很多样板代码
    * @doc https://pro.ant.design/zh-cn/docs/openapi/
    */
   openAPI: [
