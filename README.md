@@ -8,24 +8,24 @@
 本平台的核心功能可分为四大类：
 
 1）多公众号管理，用户可添加、删除、修改、查询公众号。
+![image](https://github.com/user-attachments/assets/ac38dfd5-36d8-4a28-9760-eacd4591b33b)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/rVHmCwM26R70oowh.webp "null")
 
 2）素材管理，用户可针对某个公众号进行图片、音频、视频等素材的上传、下载以及删除。
+![image](https://github.com/user-attachments/assets/7543ac2a-31c5-43c2-8780-108f7ec7bd77)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/UDWe9yqsmXWnQPAZ.webp "null")
 
 3）配置自动回复，可配置公众号收到指定消息时回复配置的内容，当用户发的消息不能匹配到配置的内容时，调用 **DeepSeek** 回复用户。
+![image](https://github.com/user-attachments/assets/afb6db55-ea3f-4968-a6fa-6f5054a26ec1)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/cX2aHw6rskybbNDK.webp "null")
 
 本项目基于 **Spring AI** 集成了 DeepSeek 实现了用户消息的 AI 自动回复，效果如下图所示：
+![image](https://github.com/user-attachments/assets/ffb3fa1f-9206-40cf-befc-334bc9831763)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/4fIafpSbSkjKMMKP.webp)
 
 4）菜单栏管理，可配置公众号的菜单栏，实现了链接、点击事件、小程序等菜单栏的点击以及二级菜单。
+![image](https://github.com/user-attachments/assets/cdf372ff-595a-4655-ba8e-26dfd07c318c)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/WqvIISGGJlNWUMcn.webp "null")
 
 ### 项目三大阶段
 
@@ -34,32 +34,32 @@
 第一阶段主要完成多公众号的管理、微信公众号服务器认证、维护多个公众号在内存的实例，解决多公众号统一管理问题。同时介绍了如何使用内网穿透实现公众号的调试功能（微信支付和阿里支付都可以用内网穿透实现本地调试）。
 
 成果：可学习到如何接入公众号服务，如何使用内网穿透调试公众号接口等
+![image](https://github.com/user-attachments/assets/0b1946f7-c148-4489-b482-919ef911c390)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/Uxt4mB541uv5Hq70.webp)
 
 2）第二阶段 - 自动回复配置平台。
 
 成果：可用于提供公众号素材服务和 AI 对话服务，如多公众号素材分类汇总管理、AI 聊天室等
 
 该阶段会完成素材相关业务，实现图片、音频、视频三种类型的素材内容上传、下载、删除、查询等功能，为智能回复功能提供基础服务。
+![image](https://github.com/user-attachments/assets/67302fc4-93e5-4f08-9ae9-d20bb02252bb)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/rabQmOstPKGwh9Hk.webp "null")
 
 该阶段还会完成智能回复相关业务，实现在关键字回复、默认回复、被关注回复等多种回复时机回复对应的内容，回复内容实现了文字回复、图片回复、音频回复、视频回复等多种消息类型。
+![image](https://github.com/user-attachments/assets/7b99706c-257f-4ade-b022-c30e4e64a8f4)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/yo2YCUpeFbCbRdnJ.webp "null")
 
 在智能回复业务中，还利用 Spring AI 完成对 DeepSeek 的调用，实现了公众号智能回复用户信息。
+![image](https://github.com/user-attachments/assets/e149b897-0916-4b02-9b03-68288ef9fd21)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/dbOwcquwxRB5w3zq.webp "null")
 
 3）第三阶段 - 优化与扩展
 
 成果：可用于多公众号菜单栏配置。
 
 该阶段通过引入消息队列、分布式锁等中间件解决了在分布式场景下的一系列问题，还扩展了公众号菜单栏配置功能。
+![image](https://github.com/user-attachments/assets/29ffc338-7504-4ad2-85b8-5525c9940084)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/4AJwgdTiwk2v01nz.webp)
 
 二、项目优势
 ------
@@ -84,26 +84,26 @@
 ### 多公众号管理系统
 
 1）公众号管理：
+![image](https://github.com/user-attachments/assets/bec51698-373c-4600-b1ca-56a3b4cd8abb)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/Wcvc2wyhDzXwmcRu.svg)
 
 ### 公众号自动回复配置平台
 
 1）配置管理：
 
 【管理员】素材管理 -> 配置自动回复类型 -> 配置自动回复内容类型 -> 查询指定素材（图片、音频、视频） -> 完成配置。
+![image](https://github.com/user-attachments/assets/f6e1adac-28e4-4f62-8f85-16eaa7751766)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/SJ1Pll2mpZY3zUxi.svg)
 
 2）回复流程：
 
 2.1）被关注回复：
+![image](https://github.com/user-attachments/assets/5e9502f6-e45d-4134-942c-92c42e0fab0e)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/YsDyY9nCpBOcOOw9.svg)
 
 2.2）用户发送消息：
+![image](https://github.com/user-attachments/assets/8207496f-07e8-4646-b155-d8838493d2e5)
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/9XR9xLkVTyovytGU.svg)
 
 四、项目功能梳理
 --------
@@ -186,4 +186,5 @@
 六、架构设计
 ------
 
-![](https://pic.code-nav.cn/course_picture/1608440217629360130/77ZRooYaXPF4oiGL.webp "null")
+![image](https://github.com/user-attachments/assets/80b238d3-231f-41d9-baa7-73e8928b5f27)
+
